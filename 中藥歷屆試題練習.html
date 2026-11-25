@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>中藥歷屆試題練習</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f7f7f4;--sf:#fff;--tx:#222;--mu:#6b6b66;--bd:#dcdcd4;--ac:#2f6f5e;--ok:#e3f3e8;--okb:#2e8b57;--ng:#fbe6e4;--ngb:#c0392b;--wn:#fff3d6}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17181a;--sf:#222427;--tx:#eceae4;--mu:#9a9a94;--bd:#3a3c40;--ac:#5fb59d;--ok:#1c3a2a;--okb:#4cc287;--ng:#43211f;--ngb:#ef6f62;--wn:#47391a}}
+:root[data-theme="dark"]{--bg:#17181a;--sf:#222427;--tx:#eceae4;--mu:#9a9a94;--bd:#3a3c40;--ac:#5fb59d;--ok:#1c3a2a;--okb:#4cc287;--ng:#43211f;--ngb:#ef6f62;--wn:#47391a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.55 -apple-system,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif}
+.w{max-width:720px;margin:0 auto;padding:12px 14px 40px}
+h1{font-size:19px;margin:6px 0 10px}
+.tabs{display:flex;gap:6px;margin-bottom:12px}
+.tabs button{flex:1;padding:9px 4px;border:1px solid var(--bd);background:var(--sf);color:var(--tx);border-radius:10px;font-size:13px}
+.tabs button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:12px}
+.yrs{display:flex;flex-wrap:wrap;gap:8px}
+.btn{padding:9px 14px;border:1px solid var(--ac);background:var(--sf);color:var(--ac);border-radius:10px;font-size:15px}
+.btn.p{background:var(--ac);color:#fff}
+.q{font-weight:600;margin-bottom:10px}
+.o{display:block;width:100%;text-align:left;padding:10px 12px;margin:6px 0;border:1px solid var(--bd);background:var(--sf);color:var(--tx);border-radius:10px;font-size:15px}
+.o.ok{background:var(--ok);border-color:var(--okb)}.o.ng{background:var(--ng);border-color:var(--ngb)}
+.ex{font-size:13.5px;color:var(--mu);margin-top:4px;padding-left:2px}
+.o.ok .ex,.o.ng .ex{color:var(--tx)}
+.meta{font-size:13px;color:var(--mu);margin-bottom:6px;display:flex;justify-content:space-between}
+.tag{display:inline-block;background:var(--wn);border:1px solid #d9a400;border-radius:6px;padding:0 6px;font-size:12px;margin-left:6px}
+.bar{height:6px;background:var(--bd);border-radius:3px;margin:6px 0 12px}.bar i{display:block;height:100%;background:var(--ac);border-radius:3px}
+.hot{border-left:4px solid var(--ngb)}
+small{color:var(--mu)}
+.tw{overflow-x:auto;margin-top:8px}table{border-collapse:collapse;min-width:620px;font-size:12.5px}th,td{border:1px solid var(--bd);padding:5px 7px;text-align:left;vertical-align:top}th{background:var(--bg);white-space:nowrap}td:first-child{font-weight:600;white-space:nowrap}
+details.card summary{cursor:pointer;font-weight:600}.hb{padding:8px 0;border-top:1px solid var(--bd)}.hb small{display:block}.hb .pt{font-size:14px;margin-top:2px}
+</style></head><body><div class="w">
+<h1>中藥歷屆試題練習</h1>
+<div class="tabs"><button data-t="home">依年份</button><button data-t="wrong">錯題</button><button data-t="hot">重錯</button><button data-t="conf">易混淆</button><button data-t="topic">考點</button><button data-t="tools">工具</button></div>
+<div id="app"></div></div>
+<script>
+// [年份, 題號, 題目, [選項], 答案索引, [各選項詳解]]
+const Q=[
+["113-2",1,"中藥萊菔子能減弱人參的補氣作用,此為七情中的哪一種配伍關係?",["相畏","相殺","相惡","相反"],2,["相畏:一藥的毒副作用被另一藥抑制。","相殺:一藥能減輕或消除另一藥的毒性。","正確。相惡:一藥能減弱另一藥的功效,萊菔子(破氣)削弱人參(補氣)。","相反:兩藥合用產生毒副作用(十八反、十九畏)。"]],
+["113-2",2,"有關中藥成分 spinosin 之敘述,下列何者錯誤?",["為 O-glycosides","具鎮靜作用","具 flavone 架構","存在於 Jujubae Fructus"],0,["錯誤(為答案)。spinosin(棘苷)是 flavone 的 C-glycoside,不是 O-glycoside。","正確。酸棗仁類 spinosin 具鎮靜安神作用。","正確。母核為 flavone。","正確。棗屬植物(含大棗)可見此成分。"]],
+["113-2",3,"中藥杜仲所含之 pinoresinol diglucoside 成分主要具有下列何種藥理作用?",["抗氧化","降血脂","降血壓","降血糖"],2,["非主要作用。","非主要作用。","正確。講義:杜仲 Lignan glycosides: Pinoresinol diglucoside(降血壓活性成分)。","非主要作用。"]],
+["113-2",4,"中藥淫羊藿具強筋骨祛風濕作用,其藥效成分 icariin 屬於下列何種化學分類?",["terpenoids","flavonoids","alkaloids","lipids"],1,["萜類,不符。","正確。講義:淫羊藿 Flavonoids(類黃酮): Icariin。","生物鹼,不符。","脂質,不符。"]],
+["113-2",5,"下列溫裏藥之成分中,何者不具揮發性?",["anethole","l-asarinin","β-caryophyllene","zingiberene"],1,["anethole(茴香腦)為茴香揮發油成分,具揮發性。","正確。l-asarinin 為木脂素,非揮發性成分。","β-caryophyllene 為倍半萜,揮發油成分。","zingiberene 為薑的揮發油成分。"]],
+["113-2",6,"下列何者為中藥麻黃(Ephedrae Herba)之主要藥理作用?",["保護肝臟","降血壓","解熱及中樞興奮","促進傷口癒合"],2,["非其主要作用。","麻黃鹼反而使血壓上升。","正確。ephedrine 具發汗解熱、平喘及中樞興奮作用。","非其主要作用。"]],
+["113-2",7,"半夏生用會有麻舌感,其刺激性成分為何?",["homogentisic acid","peiminine","raphanin","pinellin"],0,["正確。講義:半夏含刺激性物質 Homogentisic acid(尿黑酸),須以水漂炮製去除。","peiminine 為貝母生物鹼。","raphanin 為萊菔子成分。","pinellin 非主要麻舌成分。"]],
+["113-2",8,"下列中藥,何者之澱粉含量最高?",["杜仲","厚朴","葛根","阿膠"],2,["講義:杜仲含 pinoresinol diglucoside、三萜、iridoids,不以澱粉為主。","講義:厚朴含 magnocurarine、lignans、揮發油 β-eudesmol。","正確。講義小試身手:葛根成分含 Isoflavones(Daidzin、Daidzein、Puerarin)及 Starch(澱粉)。","講義:阿膠成分為 Gelatin、Collagen,不是澱粉。"]],
+["113-2",9,"下列何者為細柱五加根皮所含之 phenylpropanoid glycosides 成分?",["eleutheroside A","syringin(β)","eudesmol","atractylon"],1,["講義將 Eleutheroside A 與 Syringin β 並列於五加皮成分,但本題標準答案為 B;Eleutheroside A 一般認為是 daucosterol(甾醇苷)。","正確。syringin(即 eleutheroside B)為苯丙素苷。","eudesmol 為倍半萜。","atractylon 為蒼朮的倍半萜。"]],
+["113-2",10,"關於 Leonuri Herba 的敘述,下列何者錯誤?",["基原植物科別為芸香科","藥用部位為開花期全草","具利尿作用","所含 leonurine 可促進子宮收縮"],0,["錯誤(為答案)。益母草為唇形科,非芸香科。","正確。夏季花開時採收全草。","正確。具利尿消腫作用。","正確。leonurine 興奮子宮,用於婦科。"]],
+["113-2",11,"下列何種中藥成分之結構不含氮(N)原子?",["prunasin","ligustilide","stachydrine","hirudinoidine A"],1,["prunasin 為氰苷,含氮(腈基)。","正確。ligustilide 為苯酞類,僅含 C、H、O。","stachydrine 為生物鹼,含氮。","hirudinoidine A 為含氮化合物。"]],
+["113-2",12,"下列何者為中藥槐花主要成分之一且具有抗凝血作用?",["botulin","sophoradiol","simiarenol","quercetin"],3,["botulin 為三萜,非抗凝血代表。","sophoradiol 為三萜,非抗凝血代表。","simiarenol 為三萜。","正確。講義:Quercetin 抗凝血,含五個酚性 OH 基;Rutin(=Vitamin P)強化微血管通透性。"]],
+["113-2",13,"下列中藥與其使用部位之配對,何者錯誤?",["厚朴-樹皮","白朮-根莖","豬苓-果實","連翹-果實"],2,["正確。","正確。","錯誤(為答案)。講義:豬苓(多孔菌科)使用部位為菌核,不是果實。","正確。連翹為果實。"]],
+["113-2",14,"具瀉火解毒,且藥效成分結構屬 isoflavonoids 類,為治喉痹咽痛要藥的中藥是?",["敗醬草","黃芩","射干","蘆根"],2,["講義:敗醬草功效為排膿破血,不是以異黃酮為主。","講義:黃芩含 baicalein、wogonin,屬 flavone 類,不是 isoflavonoids。","正確。射干含 tectoridin、irigenin 等異黃酮,瀉火解毒、利咽喉(講義未見,為補充)。","蘆根為清熱瀉火類藥材,不以異黃酮為主(補充)。"]],
+["113-2",15,"下列何種中藥,其主成分化學結構不屬於黃酮類?",["Puerariae Radix","Citri Reticulatae Pericarpium","Gardeniae Fructus","Sophorae Flos et Flos Immaturus"],2,["葛根含 daidzein、puerarin,為異黃酮。","陳皮含 hesperidin,為黃酮類。","正確。講義:梔子含單萜類苷 Geniposide(iridoid),不是黃酮。","槐花含 rutin,為黃酮類。"]],
+["113-2",17,"有關中藥蛇床子之敘述,下列何者錯誤?",["基原植物科別為繖形科","具抗陰道滴蟲作用","使用部位為種子","含 osthole"],2,["正確。Cnidium monnieri 為繖形科。","正確。具殺滴蟲、止癢作用。","錯誤(為答案)。蛇床子藥用部位為成熟果實(Cnidii Fructus)。","正確。osthole(蛇床子素)為香豆素。"]],
+["113-1",19,"下列何者不是中藥當歸的主要成分?",["n-butyl benzoate","ligustilide","ferulic acid","butylidene phthalide"],0,["正確(為答案)。n-butyl benzoate 不是當歸的主要成分。","當歸主要成分之一,為苯酞類揮發油。","當歸含阿魏酸,具抗血小板凝集作用。","當歸含 butylidene phthalide,為苯酞類。"]],
+["113-1",20,"下列何者為中藥知母之功用主治?",["溫病血痢","黃疸酒毒","傷寒煩熱","驚癇骨蒸"],2,["非知母主治。","非知母主治(黃疸酒毒不是知母功效)。","正確。講義:知母(百合科 根莖)功效清肺瀉火、潤腎滋陰、治傷寒煩熱。","驚癇非知母主治。"]],
+["113-1",22,"屬於豆科植物並具補腎溫脾、固精縮尿之中藥為何?",["續斷","鎖陽","補骨脂","淫羊藿"],2,["續斷為川續斷科,補肝腎、續筋骨。","鎖陽為鎖陽科,非豆科。","正確。補骨脂為豆科,補腎溫脾、固精縮尿(講義補陽類小試身手答案 C)。","淫羊藿為小蘗科。"]],
+["113-1",23,"下列何者為中藥沉香之使用部位?",["folium","lignum","radix","stigma"],1,["folium 為葉。","正確。沉香為含樹脂的木材(Lignum)。","radix 為根。","stigma 為柱頭(如番紅花)。"]],
+["113-1",24,"下列有關中藥陳皮之敘述,何者錯誤?",["具燥濕化痰作用","為二陳湯組成中藥之一","主要作用成分為脂質","為芸香科植物"],2,["正確。理氣健脾、燥濕化痰。","正確。二陳湯含半夏、陳皮、茯苓、甘草。","錯誤(為答案)。主要成分為黃酮類(hesperidin)及揮發油,非脂質。","正確。橘為芸香科。"]],
+["113-1",25,"下列有關中藥覆盆子之敘述,何者錯誤?",["基原植物科別為 Rosaceae","使用部位為果實","主成分為 hinesol","具固精縮尿作用"],2,["正確。覆盆子為薔薇科。","正確。藥用未成熟果實。","錯誤(為答案)。hinesol 為蒼朮的倍半萜,非覆盆子主成分。","正確。益腎固精縮尿。"]],
+["113-1",27,"下列何者非屬於果實類中藥材?",["蒼耳子","車前子","枸杞子","訶子"],1,["蒼耳子為帶總苞的果實。","正確。車前子為種子。","枸杞子為果實。","講義:訶子為使君子科果實。"]],
+["113-1",28,"下列何者為中藥車前子之正確基原植物?",["Plantago ovata","Plantago psyllium","Plantago lanceolata","Plantago asiatica"],3,["P. ovata 為印度車前(洋車前),非中藥車前子基原。","P. psyllium 為西方藥用車前。","P. lanceolata 為長葉車前。","正確。車前子基原為 P. asiatica 或 P. depressa。"]],
+["113-1",30,"有關 l-tetrahydropalmatine 之敘述,下列何者錯誤?",["為中藥延胡索(Corydalis Rhizoma)之活性成分","具 isoquinoline 骨架","不具中樞作用","具有鎮痛作用"],2,["正確。為延胡索主要活性成分之一。","正確。屬原小蘗鹼型異喹啉生物鹼。","錯誤(為答案)。具中樞鎮靜及鎮痛作用。","正確。延胡索活血止痛。"]],
+["113-1",31,"中藥夏枯草之使用部位為何?",["莖梗","葉部","根部","花序或果穗"],3,["非藥用部位。","非藥用部位。","非藥用部位。","正確。夏枯草用果穗。"]],
+["113-1",33,"牡丹皮新鮮時含有 paeonolide,經酶水解後所產生之苷元為何?",["oxypaeoniflorin","paeoniflorin","paeonol","lactiflorin"],2,["oxypaeoniflorin 為芍藥苷類衍生物,非水解產物。","paeoniflorin 為單萜苷,非苷元。","正確。paeonolide 水解得 paeonol(丹皮酚)。","lactiflorin 為芍藥類成分,非產物。"]],
+["112-2",34,"下列中藥,何者藥效為「補氣固表、治表虛自汗、解肌熱」?",["丹參","當歸","黃耆","茯苓"],2,["講義:丹參功效為祛瘀生新、排膿生肌(孕婦慎用、反藜蘆),屬活血藥。","當歸屬補血、活血類,不是補氣固表。","正確。講義:黃耆(豆科 根)功效為補氣固表、治表虛自汗、解肌熱、瘡癰聖藥;玉屏風散=黃耆+白朮+防風。","茯苓屬利水滲濕類,不是補氣固表。"]],
+["112-2",40,"中藥桔梗含有下列何種多醣?",["amylopectin","chitin","inulin","pectin"],2,["amylopectin(支鏈澱粉)不是桔梗的特徵成分。","chitin(幾丁質)見於甲殼、真菌,非桔梗成分。","正確。講義:桔梗(桔梗科 根)含皂苷 platycodins 及 Inulin(菊醣)。","pectin 非講義所列桔梗成分。"]],
+["112-2",41,"下列何者為中藥枇杷葉所含之配醣體?",["platycodin D","onjisaponin A","eriojaposide A","daucosterol"],2,["platycodin D 為桔梗皂苷(桔梗主成分),非枇杷葉。","onjisaponin A 為遠志的皂苷類成分,非枇杷葉。","正確。講義:枇杷葉(薔薇科 葉)含 Apocarotenoid:Eriojaposide A,及三萜酸 maslinic acid、ursolic acid;功效止咳化痰(熱痰)。","daucosterol(胡蘿蔔苷)為甾醇苷,非枇杷葉特徵成分。"]],
+["112-2",42,"有關延胡索之敘述,下列何者錯誤?",["基原植物屬百合科","含 dehydrocorydaline 成分,具抗胃潰瘍作用","為安中散組成之一","孕婦忌服"],0,["錯誤(為答案)。講義:延胡索(Corydalis yanhusuo)為罌粟科 Papaveraceae,塊莖。","正確。講義:dehydrocorydaline 抑制胃酸分泌、抗胃潰瘍、抑制子宮收縮。","正確。講義補充:安中散組成之一。","正確。講義:孕婦忌用。"]],
+["112-2",43,"中藥連翹所含之成分,下列何者不屬於 lignan glycoside?",["forsythin","forsythide","arctiin","matairesinoside"],1,["forsythin(=phillyrin)為連翹的木脂素苷。","正確(為答案)。講義:forsythide 列於連翹的 Monoterpenoids(單萜),不是木脂素苷。","arctiin 為木脂素苷(苷元 arctigenin)。","matairesinoside 為木脂素苷(苷元 matairesinol)。"]],
+["112-2",45,"有關中藥與其所屬基原植物科名之配對,下列何者正確?",["葛根-Ranunculaceae","牡丹皮-Rosaceae","枇杷葉-Fabaceae","麥門冬-Liliaceae"],3,["葛根為豆科 Fabaceae,不是毛茛科。","牡丹皮為毛茛科 Ranunculaceae,不是薔薇科。","講義:枇杷葉為薔薇科 Rosaceae,不是豆科。","正確。麥門冬為百合科 Liliaceae。"]],
+["112-2",48,"有關中藥槐花之敘述,下列何者錯誤?",["使用部位僅為盛開的花","quercetin 含有五個酚性 OH 基","rutin 結構中之醣基在 C-3 位置","為止血藥"],0,["錯誤(為答案)。講義:槐花藥用部位包括花及花蕾(槐米),不是僅限盛開的花。","正確。講義:Quercetin 抗凝血,含五個酚性 OH 基。","正確。講義:Rutin(=Vitamin P)強化微血管通透性,醣基在 C3。","正確。槐花屬止血藥,涼血止血。"]],
+["112-2",35,"下列何種中藥含有 zeaxanthin 成分,常被應用於明目?",["車前子","石斛","枸杞子","夏枯草"],2,["車前子為車前科種子,講義未列 zeaxanthin。","講義:石斛為蘭科,含 dendrobine 生物鹼,不是 zeaxanthin 代表藥材。","正確。講義:枸杞子(茄科 果實)含 Zeaxanthin、Carotene、Betaine、Kukoamine A;功效潤肺清肝、滋腎、補虛癘、明目。","夏枯草用果穗,清肝明目,但不是以 zeaxanthin 為代表。"]],
+["112-2",36,"下列何種補益類中藥之主要活性成分屬 phenylethanoid glycoside?",["女貞子","續斷","肉蓯蓉","淫羊藿"],2,["講義:女貞子含 Iridoid glycosides(ligustroside)及三萜 ursolic acid,不是 phenylethanoid。","講義:續斷含 Iridoid glycosides(sweroside、loganin)、三萜皂苷、生物鹼 cantleyine。","正確。講義題目:肉蓯蓉所含 echinacoside 屬 phenylethanoid(苯乙醇苷類)配醣體。","講義:淫羊藿主成分 icariin 為 flavonoid。"]],
+["112-2",38,"有關中藥訶子之敘述,下列何者錯誤?",["使用部位為成熟種子","主成分為 tannin 類","亦含有 sennoside A","具澀腸止瀉作用"],0,["錯誤(為答案)。講義:訶子(使君子科)藥用部位是果實 Chebulae Fructus,不是種子。","正確。講義:Tannins(chebulinic acid、ellagic acid)。","正確。講義:含 Dianthrone glycoside: Sennoside A。","正確。講義:收澀(tannin)、澀腸止瀉,久瀉久痢。"]],
+["112-2",39,"下列何者為中藥荊芥揮發油之單萜類主成分?",["l-perillaldehyde","l-menthol","d-menthone","d-limonene"],2,["l-perillaldehyde 為紫蘇的成分,不是荊芥。","l-menthol 為薄荷的主成分,不是荊芥。","正確。講義:荊芥(唇形科 全草)的 Monoterpenoids 為 d-Menthone(鎮痛)、l-Pulegone(抗發炎);其揮發性成分為倍半萜 caryophyllene。","d-limonene 為柑橘類(如陳皮)揮發油成分,非荊芥代表。"]],
+["112-2",44,"下列中藥之性味,何者與其他三者不同?",["梔子","龍膽","黃連","五加皮"],3,["講義:梔子性味為苦、寒。","講義:龍膽性味為苦、寒,歸肝、膽、膀胱經。","黃連屬清熱燥濕藥,性味苦寒(與梔子、龍膽相同)。","正確(為答案)。講義:五加皮性味為辛、苦、溫,歸肝、腎經,與其他三者的苦寒不同。"]],
+["113-2",16,"關於中藥龍膽的敘述,下列何者錯誤?",["使用部位為根莖","歸肝、膽經","具有舒解腸道痙攣功效","苦味成分為 matrine"],3,["正確。講義:龍膽藥用部位為根及根莖。","正確。講義:歸肝、膽、膀胱經。","正確。講義:龍膽解腸道痙攣、促進傷口癒合。","錯誤(為答案)。講義:matrine 是苦參(Sophorae Flavescentis Radix)的生物鹼;龍膽的苦味成分是 gentiopicroside(單萜類苷)及 gentianine。"]],
+["113-1",32,"下列中藥與其拉丁生藥名之配對,何者正確?",["桔梗-Bupleuri Radix","甘草-Glycyrrhizae Radix","人參-Notoginseng Radix","黃芩-Scutellariae Radix"],3,["錯誤。講義解析:桔梗=Platycodonis Radix;Bupleuri Radix 是柴胡。","錯誤。講義解析:甘草正確生藥名為 Glycyrrhizae Radix et Rhizoma(根及根莖)。","錯誤。講義解析:人參=Ginseng Radix et Rhizoma;Notoginseng Radix 是三七。","正確。黃芩=Scutellariae Radix。"]],
+["113-1",29,"中藥白朮具止瀉作用,其功效為何?",["補腎","溫中","燥濕","澀腸"],2,["講義:白朮功效為燥濕、補脾和中、安胎,沒有「補腎」。","溫中為溫裏藥的功效,不是白朮。","正確。講義:白朮(菊科 根莖)含倍半萜 atractylon,功效「燥濕、補脾和中、安胎」;燥濕健脾故能止瀉。","澀腸是訶子的功效(講義訶子:澀腸止瀉),不是白朮。"]],
+["112-1",49,"下列何者為動物類中藥?",["龍膽","肉蓯蓉","鎖陽","阿膠"],3,["講義:龍膽為龍膽科植物的根及根莖。","肉蓯蓉為植物類補陽藥。","鎖陽為植物類補陽藥。","正確。阿膠為驢皮熬製的膠,講義小試身手列成分為 Gelatin、Collagen(動物蛋白)。"]],
+["112-1",51,"中藥鉤藤(Uncariae Ramulus cum Uncis)之生物鹼 rhynchophylline 具下列何種骨架?",["imidazole","isoquinoline","indole","purine"],2,["imidazole 不是鉤藤鹼的骨架。","講義:isoquinoline 骨架見於延胡索(l-THP)、黃連及黃柏(berberine)。","正確。講義:鉤藤(茜草科 帶鉤莖枝)含 Indole alkaloid: Rhynchophylline,降血壓、抗心律不整。","purine 非鉤藤鹼骨架。"]],
+["112-1",52,"Angelica dahurica 為下列何種中藥之植物基原?",["白芷","白芍","白朮","白及"],0,["正確。講義:白芷(Angelicae Dahuricae Radix)基原 Angelica dahurica,繖形科,含 furocoumarins。","白芍基原為 Paeonia lactiflora(毛茛科)。","講義:白朮基原為 Atractylodes macrocephala(菊科)。","講義:白及基原為 Bletilla striata(蘭科)。"]],
+["112-1",53,"中藥荊芥炒黑可用於:",["治傷寒頭痛","破結解毒","治血證","助脾消化"],2,["傷寒頭痛為辛溫解表類用途,不是炒黑後的用途。","破結解毒不是荊芥炒黑後的功用。","正確。講義補充:荊芥炒黑後為黑荊芥、荊芥炭,功效止血(治血症)。","助脾消化不是荊芥炒黑的功用。"]],
+["112-1",55,"下列何種中藥能潤肺化痰及潤腸通便,含有西黃耆膠黏素(Bassorin)?",["Pinelliae Rhizoma","Fritillariae Bulbus","Sterculiae Lychnophorae Semen","Armeniacae Semen"],2,["講義:半夏含 pinellin 蛋白、homogentisic acid,功效除濕化痰和胃止嘔。","講義:貝母含生物鹼 peimine、peiminine,功效潤燥化痰散結除熱。","正確。講義:胖大海(梧桐科 種子)含 Bassorin(西黃耆膠黏素),功效潤燥化痰、潤腸通便。","杏仁主成分為 amygdalin,不含 bassorin。"]],
+["112-1",57,"下列中藥,何者屬於芳香化濕藥?",["薄荷","辛夷","白朮","蒼朮"],3,["講義:薄荷屬辛涼解表藥(宣散風熱)。","講義:辛夷屬辛溫解表藥(通鼻竅)。","講義:白朮屬補氣、燥濕健脾類,不屬芳香化濕藥。","正確。講義小試身手答案為 D 蒼朮。"]],
+["112-1",58,"川芎與下列何種中藥之基原植物科別相同?",["人參","丁香","當歸","黃連"],2,["人參為五加科,川芎為繖形科,不同。","丁香為桃金孃科,不同。","正確。講義:川芎與當歸同為繖形科 Apiaceae,都含 phthalide 類成分、具補血活血功效。","講義:黃連為毛茛科 Ranunculaceae。"]],
+["112-1",59,"下列何種花類中藥之基原為豆科植物?",["Sophorae Flos et Flos Immaturus","Lonicerae Japonicae Flos","Magnoliae Flos","Carthami Flos"],0,["正確。講義:槐花(Sophora japonica L.)為 Fabaceae 豆科。","講義:金銀花為忍冬科 Caprifoliaceae。","講義:辛夷為木蘭科 Magnoliaceae。","紅花為菊科,不是豆科。"]],
+["112-1",60,"下列何種中藥之主成分為 baicalein?",["Carthami Flos","Cynomorii Herba","Scutellariae Radix","Polygalae Radix"],2,["紅花主成分為 safflower yellow、carthamin 等,不是 baicalein。","鎖陽為補陽藥,不含 baicalein。","正確。講義:黃芩(唇形科 根)含類黃酮 Baicalein、Wogonin,瀉肺火、清熱燥濕。","遠志主成分為皂苷類,不是 baicalein。"]],
+["113-1",21,"中藥枸杞子(Lycii Fructus)所含生物鹼 kukoamine A 具有下列何種藥理作用?",["降血糖","降血壓","刺激排卵","預防化學性肝損傷"],1,["講義:降血糖是枸杞子整體的藥理作用,不是特別歸屬於 kukoamine A。","正確。講義:枸杞子含生物鹼 Betaine、Kukoamine A,其中 Kukoamine A 具有降血壓、消炎功效。","講義:刺激排卵是枸杞子整體的藥理作用,不是 kukoamine A 的作用。","講義未將預防化學性肝損傷歸於 kukoamine A。"]],
+["113-1",26,"下列何者不是中藥葛根成分 Puerarin 之功效?",["抑制心搏過速","抑制血管新生","降血壓","降膽固醇"],1,["講義:Puerarin 阻斷 β 型腎上腺素受體,抑制心搏過速,屬其功效。","正確(為答案)。講義未列 puerarin 有抑制血管新生作用(講義中抑制血管新生是皂莢乙醇萍取物的作用)。","講義:Puerarin 降低血壓、眼內壓,屬其功效。","講義:Puerarin 降低膽固醇,屬其功效。"]],
+["112-1",54,"中藥柴胡之效能分類為何?",["祛寒溫中","清熱瀉火","辛涼解表","祛風止痛"],2,["祛寒溫中為溫裏藥的功效(如附子、肉桂)。","清熱瀉火為清熱藥的功效(如知母、梔子)。","正確。講義:柴胡(繖形科 根)列在辛涼解表藥,功效發表和解、疏肝解鬱;含 Saikosaponins。","祛風止痛不是柴胡的效能分類。"]],
+["112-2",46,"下列何種成分屬於 diterpene alkaloid?",["aconitine","berberine","arecoline","morphine"],0,["正確。講義:附子(毛茛科 旁生塊根)含 Diterpenoid alkaloid(雙酯類生物鹼): Aconitine(烏頭鹼),有毒,需炮製降低毒性。","講義:berberine 為 Isoquinoline alkaloid(黃連、黃柏)。","arecoline(檳榔鹼)為檳榔的吡啶類生物鹼,不是二萜類。","morphine(嗎啡)屬異喹啉類(罌粟),不是二萜類。"]],
+["112-1",61,"中藥龍膽所含生物鹼 gentianine 具有下列何種藥理作用?",["保護肝臟","抗發炎","解腸道痙攣","促進傷口癒合"],1,["保護肝臟是龍膽整體的藥理作用,不是特別歸於 gentianine。","正確。講義:Gentianine→抗發炎、降血壓。","解腸道痙攣是龍膽整體的藥理作用,不是 gentianine 的作用。","促進傷口癒合是龍膽整體的藥理作用,不是 gentianine 的作用。"]],
+["111-2",62,"有關中藥何首烏之敘述,下列何者錯誤?",["基原為蓼科植物 Polygonum multiflorum","以塊莖入藥","性微溫,味苦、甘、澀","主成分屬 anthraquinone 類,生用能潤腸通便"],1,["正確。講義:何首烏 Polygonum multiflorum Thunb.,蓼科。","錯誤(為答案)。講義:何首烏藥用部位為塊根(Polygoni Multiflori Radix),不是塊莖。","正確。講義:性微溫,味苦、甘、澀。","正確。講義:含 Anthraquinone(chrysophanol、emodin),生用潤腸通便。"]],
+["111-2",63,"下列何種中藥其主成分含多醣類及 sibiricosides?",["大棗","麥門冬","知母","黃精"],3,["講義:大棗含糖類、zizybeoside、spinosin、三萜酸。","講義:麥門冬含 ophiopogonins(皂苷)及 ophiopogonones(黃酮)。","講義:知母含 timosaponin(固醇類皂苷)及 mangiferin。","正確。講義:黃精含 Steroidal saponins: Sibiricosides A、B,及黃精多醣。"]],
+["111-2",64,"中藥知母之基原植物科別為何?",["Labiatae","Liliaceae","Orchidaceae","Apiaceae"],1,["Labiatae 為唇形科(如丹參、荊芥),不是知母。","正確。講義:知母 Anemarrhena asphodeloides,百合科 Liliaceae,藥用根莖。","Orchidaceae 為蘭科(石斛、天麻、白及)。","Apiaceae 為繖形科(當歸、川芎、白芷、柴胡)。"]],
+["111-2",65,"下列中藥何者之生藥拉丁名為 Ophiopogonis Radix?",["麥門冬","木通","鎖陽","遠志"],0,["正確。麥門冬=Ophiopogonis Radix(百合科 塊根)。","木通=Akebiae Caulis。","講義:鎖陽=Cynomorii Herba。","講義:遠志=Polygalae Radix。"]],
+["111-2",66,"下列何者屬於補陽類中藥且源自於真菌類?",["天麻","冬蟲夏草","肉蓯蓉","鎖陽"],1,["講義:天麻為蘭科植物塊莖,屬平肝息風藥。","正確。冬蟲夏草(Cordyceps)為真菌,屬補陽藥(講義小試身手答案 B)。","講義:肉蓯蓉為列當科植物肉質莖。","講義:鎖陽為鎖陽科植物肉質莖。"]],
+["111-2",67,"中藥白芷之主成分不含下列何者?",["volatile oils","flavonoids","coumarins","furocoumarins"],1,["白芷含揮發油,所以這不是答案。","正確(為答案)。講義:白芷成分為 coumarins、furocoumarins 及揮發油,不含 flavonoids。","講義:含 coumarins。","講義:含 furocoumarins(抗發炎,抑制 COX-2)。"]],
+["111-2",68,"下列解表中藥,何者藥用部位為「完全成長之未開放的花蕾」?",["Nepeta tenuifolia","Perilla frutescens","Magnolia biondii","Zingiber officinale"],2,["荊芥(講義寫 Schizonepeta tenuifolia)用全草、花穗。","Perilla frutescens 為紫蘇,用葉(紫蘇葉)。","正確。講義:辛夷 Magnoliae Flos 基原 Magnolia biondii,用未開放花蕾。","Zingiber officinale 為生薑,用根莖。"]],
+["111-2",69,"下列何種中藥之基原植物屬於繖形科,其藥效為辛涼解表、和解表裡?",["麻黃","柴胡","葛根","升麻"],1,["麻黃為辛溫解表藥,非繖形科。","正確。講義:柴胡(繖形科 Apiaceae)列在辛涼解表藥,功效發表和解、疏肝解鬱。","講義:葛根為豆科 Fabaceae。","升麻不屬繖形科。"]],
+["111-2",70,"下列中藥,何者之功用主治為「祛瘀生新,治崩帶癥瘕、目赤疝痛、風痹不遂」等?",["丹參","升麻","葛根","柴胡"],0,["正確。講義:丹參功效祛瘀生新(唇形科,含 tanshinones),孕婦慎用,反藜蘆。","升麻屬辛涼解表,功效不是祛瘀生新。","講義:葛根功效為發汗解熱、解肌發表。","講義:柴胡功效為發表和解、疏肝解鬱。"]],
+["111-2",71,"活血祛瘀藥益母草(Leonuri Herba)所含生物鹼 stachydrine(結構如圖)屬於下列何類結構之衍生物?",["quinoline","pyrrolidine","pyridine-piperidine","purine"],1,["quinoline 為雙環含氮結構,題圖不是。","正確。題圖 stachydrine 為含 N 的五員環,屬 pyrrolidine 衍生物。","pyridine-piperidine 為六員環系統,題圖不是。","purine 為雙環嘌呤結構,題圖不是。"]],
+["111-2",72,"有關中藥連翹之敘述,下列何者錯誤?",["基原植物為 Forsythia suspensa","使用部位為花蕾","具消腫排膿作用","含有 lignan、monoterpenoid、triterpenoid 及 flavonoid 等類成分"],1,["正確。講義:連翹 Forsythia suspensa(木犀科)。","錯誤(為答案)。講義:連翹使用部位為果實(Forsythiae Fructus);花蕾是金銀花。","正確。講義:功效散結瀉火、消腫排膿,瘡家聖藥。","正確。講義:含 lignans、monoterpenoids(forsythide)、triterpenes(ursolic acid)及 flavonoids(rutin)。"]],
+["111-2",73,"中藥梔子活性成分 geniposide(結構如圖)屬於下列何類化合物?",["monoterpene glycoside","secoiridoid glycoside","sesquiterpene glycoside","diterpene glycoside"],0,["正確。講義:梔子含單萜類苷(iridoid): Geniposide、Gardenoside。","secoiridoid glycoside 是龍膽 gentiopicroside 的類型,不是梔子。","geniposide 不屬倍半萜。","geniposide 不屬二萜。"]],
+["111-2",75,"下列補氣中藥,何者之活性成分屬於 cycloartane type triterpenoid(如圖)?",["人參","山藥","大棗","黃耆"],3,["人參的人參皂苷屬 dammarane 型,不是 cycloartane。","講義:山藥含 diosgenin、dioscin(固醇類皂苷)。","講義:大棗含三萜酸(oleanolic acid、ursolic acid)。","正確。講義:黃耆含 Cycloartane 三萜: Astragalosides。"]],
+["111-1",76,"有關中藥地黃之敘述,下列何者正確?",["基原為玄參科植物,使用部位為新鮮或乾燥塊莖","主成分 catalpol 為 iridoid glycoside","新鮮地黃所含醣類以 rhamnose 含量最高","生用為滋陰養血,炮製後轉為清熱涼血"],1,["錯誤。講義:地黃雖為玄參科,但使用部位是根、根莖,不是塊莖。","正確。講義:地黃含 Iridoid glycosides: Catalpol(梓醇)。","錯誤。講義:鮮地黃含量較高的是水蘇糖 stachyose,不是 rhamnose。","錯誤。講義:生地黃清熱涼血,熟地黃滋陰補血,敘述顛倒。"]],
+["111-1",77,"下列何者為中藥方劑當歸補血湯之組成藥物之一?",["人參","川芎","芍藥","黃耆"],3,["當歸補血湯不含人參。","川芎不在當歸補血湯。","芍藥不在當歸補血湯。","正確。講義:當歸補血湯=當歸+黃耆,功效補氣生血。"]],
+["111-1",78,"中藥續斷(Dipsaci Radix)所含 cantleyine 具有下列何種藥理作用?",["刺激子宮收縮作用","放鬆平滑肌作用","免疫抑制作用","預防化學性肝損傷"],1,["講義:續斷生物鹼 cantleyine 是抑制子宮收縮,不是刺激。","正確。講義:生物鹼 cantleyine→抑制子宮收縮(鬆弛平滑肌)。","講義:免疫抑制作用是續斷多醣類的作用,不是 cantleyine。","講義未將預防化學性肝損傷歸於 cantleyine。"]],
+["111-1",79,"有關淫羊藿之敘述,下列何者錯誤?",["基原植物之一為 Epimedium brevicornu","使用部位為全草","活性成分為 icariin","功用主治為補腎陽、堅筋骨"],1,["正確。講義:Epimedium brevicornum(小蘗科)。","錯誤(為答案)。講義:淫羊藿使用部位為地上部,不是全草。","正確。講義:Icariin(類黃酮)為主要活性成分。","正確。講義:補腎陽、強筋骨。"]],
+["111-1",81,"有關中藥柴胡之敘述,下列何者錯誤?",["其基原屬於繖形科植物","屬於辛溫解表藥","為逍遙散之組成藥材之一","具保肝作用"],1,["正確。講義:柴胡為繖形科 Apiaceae。","錯誤(為答案)。講義把柴胡列在辛涼解表藥,不是辛溫。","正確。講義:逍遙散由柴胡、當歸、白芍、白朮、茯苓、甘草、生薑、薄荷組成。","正確。講義:Saikosaponins 保護肝臟、抗突變、抗癌。"]],
+["111-1",82,"下列中藥,何者須以水漂炮製去除刺激性化合物尿黑酸(homogentisic acid)?",["乳香","半夏","細辛","銀杏"],1,["乳香為樹脂類活血藥,不含 homogentisic acid。","正確。講義:半夏含刺激性物質 Homogentisic acid(尿黑酸),須以水漂炮製去除。","講義:細辛地上部含馬兜鈴酸,有腎毒性,不是尿黑酸。","講義:白果(銀杏)外種皮有毒成分是 ginkgolic acid 等長鏈酚類,不是尿黑酸。"]],
+["111-1",84,"下列何者之功用主治為「暖子宮、止諸血,治崩帶、調經」?",["金銀花","蒲公英","牛膝","艾葉"],3,["講義:金銀花散熱解毒。","講義:蒲公英清熱解毒、消腫通淋。","牛膝為活血祛瘀藥,不是此功效。","正確。講義:艾葉(菊科 葉)暖子宮、止諸血、治崩漏帶下、理氣血、逐寒濕。"]],
+["111-1",85,"中藥敗醬草之功用主治為何?",["涼血破血","活血止血","排膿破血","祛風舒筋"],2,["不是敗醬草的功效描述。","不是敗醬草的功效描述。","正確。講義:敗醬草(敗醬科 全草)功效為排膿破血,為治腸癰瘡要藥。","祛風舒筋不是敗醬草的功效。"]],
+["111-1",86,"有關中藥牡丹皮之敘述,下列何者錯誤?",["與芍藥同為毛茛科植物","又名洛陽花,以根皮入藥","主含 diterpenoid 苷 paeoniflorin","功用主治為破積血、通經脈"],2,["正確。講義:牡丹皮、白芍、赤芍皆為毛茛科 Ranunculaceae。","正確。講義:牡丹皮以根皮入藥,別名有丹皮、木芍藥等。","錯誤(為答案)。講義:paeoniflorin 屬 Monoterpenes(單萜苷),不是 diterpenoid。","正確。講義:牡丹皮破積血、通經脈,為散惡血、順血脈要藥。"]],
+["111-1",88,"中藥龍膽具清熱燥濕及瀉肝定驚藥效,主成分龍膽苦苷(gentiopicrin)屬何類配醣體?",["單萜","倍半萜","雙萜","三萜"],0,["正確。講義:龍膽含單萜類苷 Secoiridoid glycosides: Gentiopicroside(Gentiopicrin)。","不是倍半萜。","不是雙萜(雙萜如附子的 aconitine 生物鹼類)。","不是三萜。"]],
+["110-2",89,"中藥知母所含芒果苷(mangiferin,結構如題圖)之苷元具下列何種骨架?",["steroid","xanthone","anthraquinone","phenylethanoid"],1,["講義:知母的 timosaponin 才是 steroid 皂苷,mangiferin 不是。","正確。講義:Xanthone C-glycoside: Mangiferin(芒果苷,含 Xanthone 骨架)。","anthraquinone 是大黃、何首烏類成分骨架。","phenylethanoid 見於肉蓯蓉的 acteoside、echinacoside。"]],
+["110-2",90,"中藥女貞子之基原植物所屬科別為何?",["Cornaceae","Rosaceae","Rhamnaceae","Oleaceae"],3,["Cornaceae 為山茱萸科。","講義:Rosaceae 為薔薇科(覆盆子、枇杷葉)。","講義:Rhamnaceae 為鼠李科(大棗、酸棗仁)。","正確。講義:女貞子(Ligustrum lucidum)為木犀科 Oleaceae。"]],
+["110-2",91,"有關杜仲的敘述,下列何者錯誤?",["經炮製後之樹皮,其白絲相連更加明顯","含有 lignan、iridoid 及 triterpenoid 等類成分","具降血壓作用","pinoresinol diglucoside 為其活性成分"],0,["錯誤(為答案)。講義:杜仲炮炙要炒到斷絲(不是白絲相連)。","正確。講義:Lignan glycosides、三萜類 ursolic acid、Iridoid glycosides。","正確。講義:降血壓、降低心收縮力。","正確。講義:Pinoresinol diglucoside 為降血壓活性成分。"]],
+["110-2",92,"藥理上具降血壓功效之補肝腎中藥為何?",["黃芩","女貞子","杜仲","鎖陽"],2,["黃芩屬清熱燥濕藥,不是補肝腎。","講義:女貞子含 ligustroside、ursolic acid,藥理為抗氧化、抗發炎、增強免疫。","正確。講義:杜仲補肝腎、強筋骨、安胎,藥理降血壓。","講義:鎖陽藥理未列降血壓,含 ursolic acid、β-sitosterol 等。"]],
+["110-2",93,"有關中藥覆盆子之敘述,下列何者錯誤?",["基原植物科別為 Rosaceae","使用部位為種子","含有機酸","其功用為補肝益腎"],1,["正確。講義:覆盆子(Rubus chingii)為薔薇科。","錯誤(為答案)。講義:覆盆子使用部位為果實,不是種子。","正確。講義成分含 fupenzic acid、有機酸類。","正確。講義:補氣益腎、補肝明目、固精縮尿。"]],
+["110-2",94,"有關中藥五味子之敘述,下列何者錯誤?",["北五味子植物基原為 Schisandra chinensis","五味為甘、酸、苦、辛及鹹","使用部位為成熟之果實","schizandrin 與 gomisin A 均為具 γ-lactone 之 lignan"],3,["正確。講義:五味子基原 Schisandra chinensis。","正確。五味子皮肉甘酸、核中辛苦,都有鹹味,故稱五味。","正確。講義:五味子使用部位為果實。","錯誤(為答案)。講義:schizandrin、gomisins 為木脂素(lignans),但不是 γ-lactone 結構。"]],
+["110-2",95,"下列何種中藥之使用部位為果實且屬於辛溫解表藥?",["枸杞子","五味子","蒼耳子","菟絲子"],2,["講義:枸杞子為補陰藥。","講義:五味子為收澀藥。","正確。蒼耳子為果實,列在辛溫解表藥。","講義:菟絲子為補陽藥,使用種子。"]],
+["110-2",96,"中藥川芎(Chuanxiong Rhizoma)所含生物鹼 ligustrazine,下列何者非其藥理作用?",["抗心律不整","降血壓","免疫抑制","抑制子宮平滑肌收縮"],2,["講義:Ligustrazine 抗心律不整。","講義:Ligustrazine 降血壓。","正確(為答案)。講義未列免疫抑制;免疫抑制是續斷多醣類的作用。","講義:Ligustrazine 抑制子宮平滑肌收縮。"]],
+["110-2",98,"下列清熱燥濕中藥,何者主含 secoiridoid 配醣體成分?",["黃芩","黃連","苦參","龍膽"],3,["講義:黃芩含 baicalein、wogonin(類黃酮)。","講義:黃連含 berberine、coptisine(isoquinoline 生物鹼)。","講義:苦參含 matrine、oxymatrine(生物鹼)。","正確。講義:龍膽含 Secoiridoid glycosides: gentiopicroside。"]],
+["110-2",99,"下列何者中藥成分屬於 steroid glycoside?",["geniposide","paeoniflorin","timosaponin A-III","syringin"],2,["講義:geniposide 為單萜(iridoid)苷。","講義:paeoniflorin 為單萜苷。","正確。講義:知母含 Steroid glycosides(固醇類皂苷): Timosaponin。","講義:syringin 為 phenylpropanoid glycoside。"]],
+["110-1",100,"下列中藥,何者所含多醣之主要作用非「增強免疫力」?",["黃耆","澤瀉","車前子","黃精"],2,["講義:黃耆多醣增強免疫力。","講義:澤瀉多醣增強免疫力。","正確。講義:車前子種皮的多醣為 hydrocolloid,吸水膨脹,作用為潤滑、緩瀉,不是增強免疫。","講義:黃精多醣刺激淋巴系統、增強免疫。"]],
+["110-1",101,"下列何者不是中藥鉤藤所含生物鹼 rhynchophylline 之主要藥理作用?",["降血壓","抗心律不整","抗發炎作用","安神作用"],2,["講義:Rhynchophylline 降血壓。","講義:Rhynchophylline 抗心律不整。","正確(為答案)。講義未列抗發炎作用。","講義:Rhynchophylline 安神、抗癲癇。"]],
+["110-1",102,"下列何種中藥為祛風勝濕之要藥?",["防風","半夏","貝母","蒼朮"],0,["正確。講義:防風(繖形科 根)祛風勝濕,治頭暈目眩、脊痛項強;李時珍說「防者禦也」,自古用治諸風。","講義:半夏功效為除濕化痰、和胃止嘔。","講義:貝母功效為潤燥化痰、散結除熱。","講義:蒼朮功效為燥濕健脾、發汗、明目,屬芳香化濕藥。"]],
+["110-1",103,"下列中藥,何者在方劑煎煤時,應後下、不宜久煎?",["柴胡","薄荷","覆盆子","黃連"],1,["柴胡無須後下的講義說明。","正確。講義:薄荷(唇形科 地上部)含 l-Menthol 揮發油,不宜久煎,應後下。","覆盆子為果實,無須後下的講義說明。","黃連無須後下的講義說明。"]],
+["110-1",104,"下列何者為中藥枇杷葉之特有成分?",["scabioside A","akeboside Stb","eriojaposide A","jujuboside A"],2,["講義:scabiosides 是黃花敗醬草的成分。","akeboside 為木通類皂苷。","正確。講義:枇杷葉含 Apocarotenoid: Eriojaposide A。","講義:jujubosides 是酸棗仁的三萜皂苷。"]],
+["110-1",105,"下列利水滲濕中藥,何者主要成分屬於倍半萜類(sesquiterpenoid)?",["茯苓","木通","白朮","澤瀉"],2,["講義:茯苓含多醣與 Lanostane 型三萜(pachymic acid)。","木通主要為三萜皂苷類。","正確。講義:白朮含 Sesquiterpenoid: Atractylon(蒼朮酮)。","澤瀉:蛙蛙整理列有 Alismol(guaiane 型倍半萜)與 Alisol(protostane 型三萜),此題標準答案為白朮。"]],
+["110-1",106,"下列中藥,何者經現代藥理實驗證實具增加冠狀動脈血流量及抗血小板凝集作用?",["川芎","薑黃","半夏","蒲公英"],0,["正確。講義:川芎藥理為增加冠狀動脈血流、抑制血小板凝集。","薑黃講義未列此作用。","講義:半夏藥理為抑制胃酸分泌、止嘔、凝血。","講義:蒲公英含 chlorogenic acid,抗感染。"]],
+["110-1",107,"中藥丹參之水溶性成分 magnesium lithospermate B(如圖),屬於下列何種類化合物?",["三萜類(triterpenoid)","類黃酮(flavonoid)","類苯基丙烷(phenylpropanoid)","皂苷(saponin)"],2,["講義:丹參的非水溶成分 Tanshinones 才是二萜醌類。","不是類黃酮。","正確。講義:丹參水溶性成分 Magnesium lithospermate B 屬 Phenylpropanoid oligomers。","不是皂苷。"]],
+["110-1",108,"下列清熱解毒中藥,其 chlorogenic acid 含量最高者為:",["敗醬草","北板藍根","金銀花","連翹"],2,["講義:敗醬草成分為 scabiosides、villoside。","講義:板藍根成分為 indican、indirubin。","正確。講義:金銀花以 Chlorogenic acid(綠原酸)為代表成分之一,拑制脂質過氧化。","講義:連翹以 lignans、forsythiaside 等為主。"]],
+["110-1",109,"下列何種中藥之基原為唇形科之 Scutellaria baicalensis?",["何首烏","黃芩","紅花","女貞子"],1,["講義:何首烏為蓼科 Polygonum multiflorum。","正確。講義:黃芩 Scutellaria baicalensis,唇形科 Lamiaceae。","紅花為菊科。","講義:女貞子為木犀科 Oleaceae。"]],
+["110-1",110,"下列利水滲濕中藥,何者主要成分屬於倍半萜類(sesquiterpenoid)?",["茯苓","木通","白朮","澤瀉"],2,["講義:茯苓含多醣與 Lanostane 型三萜。","木通主要為三萜皂苷類。","正確。講義:白朮含 Sesquiterpenoid: Atractylon。","澤瀉:蛙蛙整理列有 Alismol(guaiane 型倍半萜)與 Alisol(protostane 型三萜),此題標準答案為白朮。"]],
+["110-1",111,"下列中藥與其拉丁生藥名之配對,何者錯誤?",["天花粉-Trichosanthis Radix","地骨皮-Paeoniae Radicis Cortex","桑白皮-Mori Radicis Cortex","五加皮-Acanthopanacis Radicis Cortex"],1,["正確。講義:抬葦根(天花粉)=Trichosanthis Radix。","錯誤(為答案)。講義:地骨皮=Lycii Radicis Cortex;Paeoniae 是芍藥類。","正確。講義:桑白皮=Mori Radicis Cortex。","正確。講義:五加皮=Acanthopanacis Radicis Cortex。"]],
+["110-1",112,"下列成分何者不屬於 iridoid glycoside?",["catalpol","villoside","acteoside","sweroside"],2,["講義:地黃含 Iridoid glycoside: Catalpol。","講義:白花敗醬草含 Iridoid glycoside: Villoside。","正確(為答案)。講義:Acteoside 屬 Phenylethanoid glycosides(如肉蓯蓉、玄參),不是 iridoid。","講義:續斷含 Iridoid glycosides: Sweroside、Loganin。"]],
+["109-2",113,"下列何者不是 dendrobine 之主要活性?",["止痛","解熱","抗真菌","降血糖"],2,["講義:Dendrobine→止痛。","講義:Dendrobine→解熱。","正確(為答案)。講義未列 dendrobine 有抗真菌作用。","講義:Dendrobine→降血糖、降血壓。"]],
+["109-2",114,"中藥續斷所含成分中,下列何者具有鬆弛平滑肌之作用?",["sweroside","loganin","hederagenin 3-O-glycosides","cantleyine"],3,["講義:sweroside 是 iridoid glycoside,不是鬆弛平滑肌成分。","講義:loganin 是 iridoid glycoside,不是鬆弛平滑肌成分。","講義:hederagenin 為三萜皂苷,不是鬆弛平滑肌成分。","正確。講義:生物鹼 cantleyine→抑制子宮收縮(鬆弛平滑肌)。"]],
+["109-2",115,"下列何種中藥具寧心安神,且有斂汗作用?",["遠志","酸棗仁","茯神","細辛"],1,["講義:遠志功效強志益智、聰耳明目、利九窩、辛散鬱,無斂汗。","正確。講義:酸棗仁寧心安神,治心煩不眠,味酸、斂汗。","茯神為茯苓抱根子實部位,講義未列斂汗。","講義:細辛溫散風邪、利九窩,無斂汗。"]],
+["109-2",116,"中藥辛夷主治鼻炎及鼻蓄膿,其基原植物科別為何?",["木蘭科","五加科","大戟科","樟科"],0,["正確。講義:辛夷(Magnolia biondii)為木蘭科 Magnoliaceae,通九窩、治鼻淕(鼻竇炎)。","講義:五加科如五加皮(Araliaceae)。","大戟科不是辛夷科別。","講義:樟科如肉桂(Lauraceae)。"]],
+["109-2",118,"中藥延胡索(Corydalis Rhizoma)所含之 l-tetrahydropalmatine 具有下列何種藥理作用?",["促進傷口癒合","鎮痛鎮癇作用","免疫抑制作用","預防化學性肝損傷"],1,["講義未列。","正確。講義:l-Tetrahydropalmatine→中樞抑制、鎮痛、鎮癇。","講義未列。","講義未列。"]],
+["109-2",120,"有關中藥連翹的敘述,下列何者錯誤?",["arctiin 屬 flavonoid 類成分","forsythin 與 phillyrin 為同構異名","為散結瀉火、消腫排膿藥","基原植物為木犀科之 Forsythia suspensa"],0,["錯誤(為答案)。講義:arctiin 屬木脂素苷(Glycosides/lignans),不是 flavonoid;連翹的 flavonoid 是 rutin。","正確。講義:Forsythin 與 Phillyrin 為同構異名。","正確。講義:散結瀉火、消腫排膿。","正確。講義:Forsythia suspensa,木犀科 Oleaceae。"]],
+["109-2",121,"梔子之基原植物科別為何?",["Apocynaceae","Papaveraceae","Rosaceae","Rubiaceae"],3,["Apocynaceae 為夢桃科,不是梔子。","講義:Papaveraceae 為罌粟科(延胡索)。","講義:Rosaceae 為薔薇科(覆盆子、枇杷葉)。","正確。講義:梔子(Gardenia jasminoides)為茜草科 Rubiaceae。"]],
+["109-2",122,"下列何種中藥之植物基原為唇形科,且其主成分為 baicalein?",["黃芩","夏枯草","薄荷","益母草"],0,["正確。講義:黃芩(唇形科)含類黃酮 Baicalein、Wogonin。","夏枯草雖屬唇形科,但主成分不是 baicalein。","講義:薄荷(唇形科)主成分為 l-Menthol。","益母草雖屬唇形科,但主成分不是 baicalein。"]],
+["109-2",123,"下列中藥,何者具有 labdane type 二萜苷的成分?",["覆盆子","五味子","木通","茯苓"],0,["正確。講義:覆盆子含 Labdane 二萜類: Goshonoside(覆盆子苷)。","講義:五味子含 lignans(schizandrin、gomisins)。","木通主要為三萜皂苷類。","講義:茯苓含多醣與 Lanostane 型三萜。"]],
+["109-1",125,"下列有關中藥地黃主成分梓醇(catalpol)之敘述,何者正確?",["屬於單萜類","在熟地黃含量較生地黃高","含鼠李糖基","其醣基位於第 5 位置"],0,["正確。講義:地黃含單萜類苷 Iridoid glycosides: Catalpol(梓醇)。","錯誤。講義未有此說法;熟地黃為經炮製,一般認為 catalpol 經炮製後減少(補充)。","錯誤。講義:catalpol 的醣基是 D-glucose,不是鼠李糖。","錯誤。講義:Catalpol 的 D-glucose 接在 C1,不是第 5 位。"]],
+["109-1",126,"下列何種中藥含有玉米黃素(zeaxanthin)與胡蘿蔔素(carotene)?",["丹參","枸杞子","五味子","梔子"],1,["講義:丹參含 tanshinones、Mg lithospermate B。","正確。講義:枸杞子色素含 Zeaxanthin、Carotene。","講義:五味子含 lignans(schizandrin、gomisins)。","講義:梔子紅色色素為 crocin(講義寫 Corcin/Gardenin)。"]],
+["109-1",127,"有關淫羊藿之敘述,下列何者錯誤?",["有效成分為 lignan 類","icariin 之 C-3 接有 O-rhamnosyl、C-7 接有 O-glucosyl","具有 phytoestrogen 作用","屬於補陽藥"],0,["錯誤(為答案)。講義:淫羊藿有效成分為 Flavonoids(類黃酮)Icariin,不是 lignan。","正確。講義:Icariin C3 接 O-rhamnosyl、C7 接 O-glucosyl。","正確。講義:Icariin 屬 Phytoestrogen(植物雌激素)。","正確。講義:淫羊藿列在補陽藥,補腎陽、強筋骨。"]],
+["109-1",128,"中藥沙苑蒺藜成分紫雲英苷(astragalin,如圖)屬於下列何類化合物?",["anthraquinone glycoside","diterpenoid glycoside","steroid glycoside","flavonoid glycoside"],3,["anthraquinone glycoside 是大黃類成分,題圖不是。","diterpenoid glycoside 如覆盆子的 goshonoside,不是紫雲英苷。","steroid glycoside 如知母的 timosaponin,不是紫雲英苷。","正確。講義:沙苑蒺藜含 Flavonoid(類黃酮苷): Astragalin。"]],
+["109-1",129,"有關中藥天麻之敘述,下列何者正確?",["基原屬於蕐麻科植物","基原植物為 Rehmannia glutinosa","其使用部位為果實","為平肝息風藥"],3,["錯誤。講義:天麻(Gastrodia elata)為蘭科 Orchidaceae。","錯誤。Rehmannia glutinosa 是地黃;天麻基原為 Gastrodia elata。","錯誤。講義:天麻使用部位為塊莖。","正確。講義:天麻、鈎藤、白殭蠶列在平肝息風藥;天麻含 gastrodin、鎮靜、抗痙攣、抗癫癇。"]],
+["109-1",130,"下列中藥,何者功用為「通九窩,治鼻塞鼻淕」等?",["辛夷","丹參","艾葉","紫蘇葉"],0,["正確。講義:辛夷功效為通九窩,治鼻塞鼻淕(鼻竇炎)、目眩齒痛。","講義:丹參功效為祛瘀生新。","講義:艾葉功效為暖子宮、止諸血。","紫蘇葉為辛溫解表藥,非此主治。"]],
+["109-1",131,"中藥茯苓之基原植物科別與其使用部位為何?",["Polygalaceae,根","Polygonaceae,塊根","Polypodiaceae,孢子","Polyporaceae,菌核"],3,["Polygalaceae 是遠志科,使用根(遠志)。","Polygonaceae 是蓼科,使用塊根(何首烏)。","Polypodiaceae 為水龍骨科蕨類,雖名字相近,但不是茯苓。","正確。講義:茯苓 Poria cocos,多孔菌科 Polyporaceae,使用部位為菌核。"]],
+["109-1",133,"主含 iridoid glycoside 類成分之中藥為何?",["黃柏、五味子","續斷、山茱萸","苦參、女貞子","酸棗仁、杜仲"],1,["講義:黃柏含 berberine、obakunone;五味子含 lignans,都不是 iridoid。","正確。講義:續斷含 Iridoid glycosides(sweroside、loganin);山茱萸主含 iridoid glycoside morroniside(後者為補充)。","講義:苦參含 matrine 生物鹼,不是 iridoid;女貞子雖含 ligustroside,但苦參不符。","講義:酸棗仁主含三萜皂苷 jujubosides;杜仲雖含 iridoid,但酸棗仁不符。"]],
+["109-1",134,"古人稱瘡家聖藥是指下列何種中藥?",["金銀花","紫草","連翹","蒲公英"],2,["講義:金銀花功效為散熱解毒,未稱瘡家聖藥。","講義:紫草功效為涼血、活血、通二便。","正確。講義:連翹功效「散結瀉火、消腫排膿、瘡家聖藥」。","講義:蒲公英功效為清熱解毒、消腫通淋。"]],
+["108-2",136,"肉蓯蓉所含 echinacoside 屬於下列何類配醣體?",["iridoid","phenylethanoid","flavonoid","anthraquinone"],1,["講義:iridoid 如續斷的 sweroside、地黃的 catalpol。","正確。講義:肉蓯蓉含 Phenylethanoid glycosides: Acteoside、Echinacoside。","講義:flavonoid 如淫羊藿 icariin。","講義:anthraquinone 如何首烏 chrysophanol。"]],
+["108-2",137,"淫羊藿之主藥效成分屬下列何類?",["polysaccharides","triterpenoids","alkaloids","flavonoids"],3,["講義:淫羊藿主成分不是多醣。","講義:淫羊藿主成分不是三萜。","講義:淫羊藿主成分不是生物鹼。","正確。講義:淫羊藿主成分為 Flavonoids(類黃酮): Icariin。"]],
+["108-2",138,"下列何種中藥地上部含有馬兜鈴酸(aristolochic acid)?",["半夏","木通","細辛","辛夷"],2,["講義:半夏的刺激性物質是 homogentisic acid。","木通(Akebiae Caulis)不含馬兜鈴酸;含馬兜鈴酸者是關木通。","正確。講義:細辛(馬兜鈴科)地上部含 Aristolochic acid(馬兜鈴酸)、Aritolochine,有腎毒性。","講義:辛夷含 magnolin、揮發油,不含馬兜鈴酸。"]],
+["108-2",139,"下列何種中藥常用於治療鼻塞、流濁涕?",["荊芥","辛夷","酸棗仁","赤芍"],1,["講義:荊芥散風透疹。","正確。講義:辛夷通九窩,治鼻塞鼻淕(鼻竇)、治鼻炎、鼻蓄膿、鼻塞、流濁涕。","講義:酸棗仁寧心安神。","講義:赤芍散惡血、瀉肝火。"]],
+["108-2",140,"下列何者具有發汗解熱且臺灣有產?",["葛根","梔子","知母","地黃"],0,["正確。講義:葛根功效發汗解熱、解肌發表,講義補充「台灣有產(質量多)」。","講義:梔子清心肺熱、由小便出。","講義:知母清肺瀉火、潤腎滋陰。","講義:地黃生用清熱涼血、熟用滋陰補血。"]],
+["108-2",141,"用以清熱化痰之浙貝母,其主成分 peimine 之結構屬於下列何種生物鹼?",["indole alkaloid","isoquinoline alkaloid","steroidal alkaloid","tropane alkaloid"],2,["講義:indole alkaloid 如鈎藤的 rhynchophylline、吳茱萸的 evodiamine。","講義:isoquinoline 如黃連 berberine、延胡索 l-THP。","正確。講義:浙貝母含 Steroidal Alkaloids: Peimine(Verticine)、Peiminine。","tropane alkaloid 為莨蔷類鹼,不是貝母。"]],
+["108-2",143,"關於中藥紫草之敘述,下列何者錯誤?",["基原植物之一為 Lithospermum erythrorhizon","具解熱鎮痛及抗發炎作用,可治水火燙傷","基原之科別為 Boraginaceae 植物","shikonin 與 alkannin 在構造上屬 diastereomer"],3,["正確。講義:紫草基原含 Lithospermum erythrorhizon。","正確。講義:解熱、鎮痛、抗發炎,治療水火燙傷。","正確。講義:紫草為紫草科 Boraginaceae。","錯誤(為答案)。講義:Shikonin 與 Alkannin 是 Enantiomer(鏡像/對掌異構物),不是 diastereomer。"]],
+["108-2",144,"下列哪種藥材始載於神農本草經,列為下品,具有祛寒溫中、回陽救逆之藥效?",["石斛","苦參","貝母","附子"],3,["講義:石斛功效為養胃生津、補虛勞,不是回陽救逆。","講義:苦參功效為瀉火燥濕、祛風逐水、殺蟲。","講義:貝母功效為潤燥化痰、散結除熱。","正確。講義:附子(Aconiti Tuber)功效祛寒溫中、回陽救逆,有毒需炮製。"]],
+["108-1",145,"下列有關黃耆之敘述,何者錯誤?",["藥用部位為根部","為豆科植物","生藥名為 Astragali Radix","蒙古黃耆之學名為 Astragalus membranaceus (Fisch.) Bge."],3,["正確。講義:黃耆為根。","正確。講義:黃耆為 Fabaceae 豆科。","正確。講義:生藥名 Astragali Radix。","錯誤(為答案)。講義:蒙古黃耆的學名是 Astragalus membranaceus (Fisch.) Bunge var. mongholicus (Bunge) Hsiao;膜莢黃耆才是 Astragalus membranaceus (Fisch.) Bunge。"]],
+["108-1",146,"下列何者為杜仲之降血壓成分?",["aucubin","ulmoside","pinoresinol diglucoside","ursolic acid"],2,["講義:aucubin 是 iridoid 苷,不是降血壓成分。","講義:ulmoside 是雙萄萄糖苷類 iridoid,不是降血壓成分。","正確。講義:Pinoresinol diglucoside 為杜仲降血壓活性成分。","講義:ursolic acid 為三萜類,不是降血壓成分。"]],
+["108-1",148,"屬於使君子科並具斂肺澀腸、降火利咽而開音的藥物為:",["桔梗","覆盆子","五味子","訶子"],3,["講義:桔梗功效為止咳平喘、清利頭目咽喉。","講義:覆盆子功效為固精縮尿、補肝明目。","講義:五味子屬木蘭科,功效斂肺鎮咳、斂汗。","正確。講義:訶子(使君子科 果實)功效斂肺澀腸、降火利咽、開音、久瀉久痢。"]],
+["108-1",149,"下列何者為中藥歸類為活血化瘀藥且含有 phthalide 類成分?",["荊芥","厚朴","川芎","白朮"],2,["講義:荊芥功效為散風透疹,屬解表藥。","講義:厚朴功效為益腸胃、燥濕、行氣,含 magnolol。","正確。講義:川芎含 Phthalides: Ligustilide,功效和血行氣、治一切血症。","講義:白朮含 atractylon,功效燥濕補脾。"]],
+["108-1",151,"清熱解毒藥中,含 forsythiaside 成分者何者?",["敗醬草","北板藍根","金銀花","連翹"],3,["講義:敗醬草含 scabiosides、villoside。","講義:板藍根含 indican、indirubin。","講義:金銀花含 chlorogenic acid、loganin、lonicerin。","正確。講義:連翹含 Forsythiaside、Arctiin、Matairesinoside 等。"]],
+["108-1",152,"含有靛苷(indican)成分的中藥為:",["Inulae Flos","Isatidis Radix","Imperatae Rhizoma","Ipomoeae Semen"],1,["旋覆花(Inulae Flos)不是 indican 的來源。","正確。講義:板藍根(Isatidis Radix,十字花科 根)含 Indican、Indirubin,Indirubin 用於治療 CML。","白茅根(Imperatae Rhizoma)不是 indican 的來源。","牽牛子(Ipomoeae Semen)不是 indican 的來源。"]],
+["108-1",153,"下列哪一個中藥之使用部位為乾燥花序或果穗?",["夏枯草","梔子","敗醬草","蒺藜"],0,["正確。夏枯草使用部位為果穗(講義小試身手:夏枯草為花序或果穗)。","講義:梔子使用部位為果實。","講義:敗醬草使用部位為全草。","講義:蒺藜使用部位為果實。"]],
+["108-1",154,"梔子為清熱瀉火的中藥,其主成分 geniposide 是屬於何種配醣體?",["單萜類","倍半萜類","雙萜類","三萜類"],0,["正確。講義:梔子含單萜類苷 Geniposide、Gardenoside。","geniposide 不屬倍半萜類。","geniposide 不屬雙萜類。","geniposide 不屬三萜類。"]],
+["108-1",155,"下列何種中藥之活性成分屬於 diterpenoid alkaloid 類?",["Aconitum carmichaeli","Corydalis yanhusuo","Evodia rutaecarpa","Uncaria rhynchophylla"],0,["正確。講義:附子 Aconitum carmichaeli 含 Diterpenoid alkaloid: Aconitine。","講義:延胡索含 isoquinoline 類生物鹼 l-THP。","講義:吳茱萸含 indole alkaloid: evodiamine、rutaecarpine。","講義:鉤藤含 indole alkaloid: rhynchophylline。"]],
+["107-2",156,"下列何者為蒺藜所含之配醣體?",["tribuloside","rutin","daucosterol","daidzin"],0,["正確。講義:蒺藜(蒺藜科 果實)含 Flavonoid glycosides: Tribuloside、Astragalin。","講義:rutin 是槐花、蓮子的成分,不是蒺藜。","daucosterol 為甾醇苷,不是蒺藜的配醣體成分。","講義:daidzin(大豆苷)是葛根的成分。"]],
+["107-2",157,"關於中藥厚朴之敘述,下列何者錯誤?",["基原植物為 Magnolia officinalis","使用部位是根皮","主要成分為 magnolol","益腸胃"],1,["正確。講義:厚朴基原 Magnolia officinalis,木蘭科。","錯誤(為答案)。講義:厚朴使用部位為樹皮(Magnoliae Cortex),不是根皮。","正確。講義:Lignans: Magnolol、Honokiol。","正確。講義:益腸胃、燥濕、行氣、消積。"]],
+["107-2",158,"下列何種中藥基原為 Lonicera japonica Thunb. 及其同屬近緣植物?",["蒲公英","金銀花","夏枯草","細辛"],1,["講義:蒲公英基原為 Taraxacum mongolicum,菊科。","正確。講義:金銀花(Lonicerae Japonicae Flos)基原 Lonicera japonica Thunb.,忍冬科。","夏枯草基原不是 Lonicera。","講義:細辛基原為 Asarum heterotropoides,馬兜鈴科。"]],
+["107-2",159,"Shikonin 屬於下列何種成分?",["naphthoquinone","anthraquinone","1,2-benzoquinone","coumarin"],0,["正確。講義:紫草含 Naphthoquinones(紫色色素): Shikonin、Alkannin。","anthraquinone 如大黃、何首烏的 chrysophanol。","shikonin 不是 1,2-benzoquinone。","coumarin 如白芷、獨活的 osthole。"]],
+["107-2",160,"下列中藥何者主成分為雙萜類生物鹼,具祛寒溫中效能?",["吳茱萸","細辛","附子","丁香"],2,["講義:吳茱萸含 indole alkaloid evodiamine,不是雙萜類。","講義:細辛含 lignan l-asarinin、methyleugenol。","正確。講義:附子含 Diterpenoid alkaloid: Aconitine,功效祛寒溫中、回陽救逆。","講義:丁香含 eugenol 揮發油,不是生物鹼。"]],
+["107-1",161,"何首烏之主要成分之一為何?",["platycodin A","chlorogenic acid","albiflorin","chrysophanol"],3,["platycodin 是桔梗的皂苷。","講義:chlorogenic acid 是金銀花、蒲公英的成分。","albiflorin 是芍藥類成分。","正確。講義:何首烏含 Anthraquinone: Chrysophanol、Emodin。"]],
+["107-1",162,"黃耆主要成分不含下列那一類?",["polysaccharides","triterpenoids","diterpenes","flavonoids"],2,["講義:黃耆含 Polysaccharides: Astragalans。","講義:黃耆含 Cycloartane 三萜: Astragalosides。","正確(為答案)。講義:黃耆成分不含二萜類。","講義:黃耆含 Flavonoids: Calycosin。"]],
+["107-1",163,"下列有關當歸之敘述,何者錯誤?",["神農本草經列為上品","精油成分以 ligustilide 及 butylidene phthalide 為主","屬繖形科植物","具潤腸通便作用"],0,["錯誤(為答案)。講義當歸頁:分類為中品,不是上品。","正確。講義:揮發油 Phthalide: Ligustilide、Butylidene phthalide。","正確。講義:當歸為繖形科 Apiaceae。","正確。講義:功效補血活血、潤腸通便。"]],
+["107-1",164,"下列何者非紫蘇常用之藥用部位?",["葉","果實","莖","根"],3,["紫蘇葉(Perillae Folium)為紫蘇常用藥用部位。","紫蘇子為果實,屬常用部位(補充)。","紫蘇梗為莖,屬常用部位(補充)。","正確(為答案)。紫蘇根不是常用藥用部位。"]],
+["107-1",165,"下列何者含有 indirubin?",["金銀花","板藍根","夏枯草","蒲公英"],1,["講義:金銀花含 chlorogenic acid、loganin、lonicerin。","正確。講義:板藍根含 Indican、Indirubin。","夏枯草不含 indirubin。","講義:蒲公英含 taraxasterol、mongolicumin B、chlorogenic acid。"]],
+["107-1",166,"Lonicerin 和 loganin 為下列何種中藥之成分?",["蒲公英","金銀花","芍藥","板藍根"],1,["講義:蒲公英含 taraxasterol、chlorogenic acid。","正確。講義:金銀花含 Loganin(iridoid glycoside)與 Lonicerin(flavone glycoside)。","講義:芍藥含 paeoniflorin。","講義:板藍根含 indican、indirubin。"]],
+["107-1",167,"下列何種藥材為三黃瀉心湯的組成藥材之一?",["黃連","黃柏","附子","麻黃"],0,["正確。講義:三黃瀉心湯 = 黃芩 + 黃連 + 大黃,功效瀉火解毒。","黃柏不在三黃瀉心湯中(黃連解毒湯才有黃柏)。","附子為溫裏藥,不在此方。","麻黃為解表藥,不在此方。"]],
+["107-1",168,"下列何者屬於 lanostane type 三萜骨架?",["tanshinone I","pachymic acid","botulin","α-turmerone"],1,["講義:tanshinones 為丹參的二萜醌類。","正確。講義:茯苓含 Lanostane type 三萜: Pachymic acid、Tumulosic acid。","botulin(betulin)為 lupane 型三萜,不是 lanostane。","α-turmerone 為倍半萜(薑黃),不是三萜。"]],
+["106-2",169,"下列有關龍膽之敘述,何者錯誤?",["藥用部位是根及根莖","具清熱瀉火作用","屬 Iridaceae 植物","含 secoiridoid 配醣體"],2,["正確。講義:龍膽使用部位為根及根莖。","正確。講義:龍膽瀉肝膽火、清熱瀉火、除下焦濕熱。","錯誤(為答案)。講義:龍膽為龍膽科 Gentianaceae,不是鳶尾科 Iridaceae。","正確。講義:龍膽含 Secoiridoid glycosides: Gentiopicroside。"]],
+["105-2",170,"下列有關中藥覆盆子之敘述,何者錯誤?",["屬 Rosaceae 植物","非神仙六子丸之組成藥材","可補肝益腎","含有機酸"],1,["正確。講義:覆盆子為薔薇科 Rosaceae。","錯誤(為答案)。講義:神仙六子丸由菟絲子、枸杞子、蛇床子、五味子、金鈴子、覆盆子組成,覆盆子是其中之一。","正確。講義:補氣益腎、補肝明目、固精縮尿。","正確。講義:覆盆子含有機酸類。"]],
+["105-1",171,"艾葉可用於:",["活血化瘀","血熱妄行","清熱涼血","崩漏帶下"],3,["艾葉不是活血化瘀藥。","血熱妄行屬涼血止血藥的適應症,不是艾葉(艾葉性溫)。","艾葉性溫,不是清熱涼血。","正確。講義:艾葉(菊科 葉)暖子宮、止諸血、治崩漏帶下、理氣血、逐寒濕。"]],
+["104-2",172,"下列何者為動物性中藥?",["烏頭","阿膠","貝母","乳香"],1,["烏頭為毛茛科植物(附子之母根)。","正確。講義:阿膠(Asini Corii Colla)為驢皮熬製,成分 Gelatin、Collagen。","講義:貝母為百合科植物鱗莖。","乳香為樹脂類藥材,屬植物來源。"]],
+["104-2",173,"下列補陽藥中,何者具有補肝腎、強筋骨、安胎之藥效?",["杜仲","淫羊藿","肉蓯蓉","鎖陽"],0,["正確。講義:杜仲功效補肝腎、強筋骨、安胎。","講義:淫羊藿功效補腎陽、強筋骨,沒有安胎。","講義:肉蓯蓉功效補腎陽、益髓強筋、滋潤五臟。","講義:鎖陽功效益精興陽、潤滑大腸。"]],
+["104-1",174,"紫草之主成分紫草素(shikonin)是下列何種類型成分?",["Alkaloid","Tannin","Monoterpenoid","Naphthoquinone"],3,["shikonin 不是生物鹼。","shikonin 不是鞣質。","shikonin 不是單萜。","正確。講義:紫草含 Naphthoquinones(紫色色素): Shikonin。"]],
+["103-2",175,"五味子具斂肺鎮咳作用,其藥效成分歸屬於何類化合物?",["Lignans","Flavonoids","Coumarins","Tannins"],0,["正確。講義:五味子含 Lignans: Schizandrin、Gomisins,功效斂肺鎮咳、斂汗止瀉。","五味子藥效成分不是 flavonoids。","coumarins 如白芷、獨活。","tannins 如訶子的鞣質。"]],
+["103-1",176,"下列何種藥材具有雄性激素樣作用,可促進精液分泌?",["淫羊藿","五味子","杜仲","當歸"],0,["正確。講義:淫羊藿 icariin 屬 Phytoestrogen,刺激性腺分泌,可產生雄性激素樣作用,促進精液分泌。","講義:五味子含 lignans,鎮咳保肝。","講義:杜仲降血壓、降低心收縮力。","講義:當歸活血、鎮痛。"]],
+["102-2",178,"黃連治瀉痢是屬於下列何種功能?",["清熱燥濕及瀉火解毒","清熱解毒及涼血止血","清熱瀉火及清熱涼血","清熱涼血及清入燥濕"],0,["正確。講義:黃連功效清熱燥濕、瀉火解毒,益肝膽、厚腸胃、瀉心火。","講義黃連頁無涼血止血的功效。","黃連不是清熱涼血。","此組合不是講義對黃連的功效描述。"]],
+["102-2",179,"下列何種成分為紫草之主成分?",["Magnolol","Atractylon","Baicalein","Shikonin"],3,["講義:Magnolol 是厚朴的成分。","講義:Atractylon 是白朮的成分。","講義:Baicalein 是黃芩的成分。","正確。講義:紫草含 Shikonin、Alkannin(萘醌類)。"]],
+["102-1",180,"下列何者為柴胡之成分?",["Magnolol","Saikosaponin","Baicalin","Coptisine"],1,["講義:Magnolol 是厚朴的成分。","正確。講義:柴胡含 Saikosaponins A~G、Bupleurumol。","Baicalin 是黃芩的成分。","講義:Coptisine 是黃連的成分。"]],
+["102-1",182,"下列有關黃連之科名、學名及生藥名之配對,何者正確?",["Ranunculaceae-Coptis chinensis-Coptidis rhizoma","Ranunculaceae-Coptis sinensis-Coptidis radix","Papaveraceae-Coptis chinensis-Coptidis rhizoma","Papaveraceae-Coptis sinensis-Coptidis radix"],0,["正確。講義:黃連 Coptidis Rhizoma,基原 Coptis chinensis,毛茛科 Ranunculaceae,根莖。","學名拼成 sinensis 及生藥名 radix 都不對(使用部位是根莖)。","Papaveraceae 是罌粟科(延胡索),黃連是毛茛科。","科名、學名拼法與生藥名都不對。"]],
+["101-2",183,"柴胡除具有辛涼解表、和解表裡之作用外,還具有下列何種藥效?",["疏肝解鬱","補血潤肺","溫中祛寒","行氣降逆"],0,["正確。講義:柴胡功效發表和解、和解表裡、散結調經、引清氣上升、疏肝解鬱。","補血潤肺不是柴胡功效。","溫中祛寒是溫裏藥的功效。","行氣降逆不是柴胡功效。"]],
+["101-2",185,"紫草藥材,是使用該植物之何種部位?",["根","莖","葉","花"],0,["正確。講義:紫草(Lithospermi Radix / Arnebiae Radix,紫草科)使用部位為根。","紫草不用莖。","紫草不用葉。","紫草不用花。"]],
+["101-1",186,"主要含 lignan 類及 iridoids 類之補陽藥為何?",["杜仲","肉蓯蓉","鎖陽","補骨脂"],0,["正確。講義:杜仲含 Lignan glycosides(pinoresinol diglucoside)及 Iridoid glycosides(aucubin、ulmoside)。","講義:肉蓯蓉含 phenylethanoid glycosides(acteoside、echinacoside)。","講義:鎖陽含 ursolic acid、β-sitosterol、daucosterol、anthocyanidin。","補骨脂為豆科補腎溫脾藥,不是 lignan 加 iridoid 類。"]],
+["100-1",187,"由白朮、黃耆與防風組成,用以治表虛自汗之方劑為:",["玉屏風散","荊防敗毒散","消風散","防風通聖散"],0,["正確。講義:玉屏風散 = 黃耆 + 白朮 + 防風。","荊防敗毒散不是此三味組成的方劑。","消風散不是此三味組成的方劑。","防風通聖散不是此三味組成的方劑。"]],
+["99-1",188,"荊芥藥材經炒黑後為荊芥炭,具有下列何種作用?",["健胃","止血","利尿","補血"],1,["荊芥炭不是健胃用。","正確。講義補充:荊芥炒黑後為黑荊芥、荊芥炭,功效止血(治血症)。","荊芥炭不是利尿用。","荊芥炭不是補血用。"]],
+["113-2",18,"下列何種中藥具有生血生肌作用,為癰疽聖藥?",["當歸","連翹","黃耆","黃連"],2,["當歸補血活血、潤腸通便,講義未稱為癰疽聖藥。","講義:連翹散結瀉火、消腫排膿,為瘡家聖藥,但不是生血生肌。","正確。講義:黃耆補氣固表、治表虛自汗、解肌熱,為瘡癰聖藥。","講義:黃連清熱燥濕、瀉火解毒,不具生肌作用。"]],
+["109-1",135,"下列何種中藥列為神農本草經之下品?",["山藥","麻黃","桔梗","枸杞子"],2,["山藥不是下品(列為上品)。","蛙蛙整理:麻黃列為中品。","正確。蛙蛙整理:下品有夏枯草、半夏、附子、桔梗、白芨、連翹(口訣:下半年父子遇劫機翹辮子了)。","枸杞子不是下品(列為上品)。"]]
+];
+const YO=["113-2","113-1","112-2","112-1","111-2","111-1","110-2","110-1","109-2","109-1","108-2","108-1","107-2","107-1","106-2","105-2","105-1","104-2","104-1","103-2","103-1","102-2","102-1","101-2","101-1","100-1","99-1"];Q.sort((a,b)=>YO.indexOf(a[0])-YO.indexOf(b[0])||a[1]-b[1]);Q.forEach(q=>q.id=q[0]+"#"+q[1]);
+let S={};try{S=JSON.parse(localStorage.getItem("zy_stats")||"{}")}catch(e){}
+function save(){try{localStorage.setItem("zy_stats",JSON.stringify(S))}catch(e){}}
+const $=s=>document.querySelector(s),app=$("#app");
+let tab="home",list=[],i=0,done=false,score=0,mode="";
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{tab=b.dataset.t;render()});
+function st(id){return S[id]||(S[id]={w:0,c:0,pool:false})}
+function render(){
+ document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("on",b.dataset.t===tab));
+ if(tab==="home"&&!list.length)home();else if(tab==="home")quiz();
+ else if(tab==="wrong")wrong();else if(tab==="conf")conf();else if(tab==="topic")topics2();else if(tab==="tools")tools();else hot();
+}
+function home(){
+ const ys=[...new Set(Q.map(q=>q[0]))];
+ app.innerHTML='<div class="card"><b>選擇年份開始練習</b><p><small>答題後會顯示每個選項的詳解。目前收錄題庫 '+Q.length+' 題。</small></p><div class="yrs">'+ys.map(y=>'<button class="btn" data-y="'+y+'">'+y+'(' +Q.filter(q=>q[0]===y).length+'題)</button>').join("")+'</div></div>';
+ app.querySelectorAll("[data-y]").forEach(b=>b.onclick=()=>start(Q.filter(q=>q[0]===b.dataset.y),"year"));
+}
+function start(l,m){list=l;i=0;score=0;done=false;mode=m;tab=m==="year"?"home":"wrong";quiz()}
+function quiz(){
+ if(i>=list.length){app.innerHTML='<div class="card"><b>完成!</b><p>答對 '+score+' / '+list.length+'</p><button class="btn p" id="back">返回</button></div>';
+  $("#back").onclick=()=>{list=[];tab=mode==="year"?"home":"wrong";render()};return}
+ const q=list[i],s=st(q.id);
+ app.innerHTML='<div class="meta"><span>'+q[0]+' 第'+q[1]+'題'+(s.w>=2?'<span class="tag">🔥錯'+s.w+'次</span>':'')+'</span><span>'+(i+1)+'/'+list.length+'</span></div><div class="bar"><i style="width:'+(i/list.length*100)+'%"></i></div><div class="card"><div class="q">'+q[2]+'</div><div id="os">'+q[3].map((o,k)=>'<button class="o" data-k="'+k+'">('+"ABCD"[k]+') '+o+'</button>').join("")+'</div></div><div id="nx"></div>';
+ done=false;
+ app.querySelectorAll(".o").forEach(b=>b.onclick=()=>answer(+b.dataset.k));
+}
+function answer(k){
+ if(done)return;done=true;const q=list[i],s=st(q.id),ok=k===q[4];
+ if(ok){score++;s.c++;if(mode==="wrong")s.pool=false}else{s.w++;s.pool=true}
+ save();
+ app.querySelectorAll(".o").forEach((b,n)=>{if(n===q[4])b.classList.add("ok");else if(n===k)b.classList.add("ng");
+  b.insertAdjacentHTML("beforeend",'<div class="ex">'+(n===q[4]?"✔ ":"✘ ")+q[5][n]+'</div>')});
+ $("#nx").innerHTML='<button class="btn p" id="n">'+(i+1<list.length?"下一題":"看結果")+'</button>';
+ $("#n").onclick=()=>{i++;quiz()};
+}
+function wrong(){
+ list=[];const p=Q.filter(q=>st(q.id).pool);
+ app.innerHTML='<div class="card"><b>錯題測驗區</b><p>目前待複習錯題:<b>'+p.length+'</b> 題<br><small>在此區答對一次即移出錯題區(錯誤次數紀錄仍保留)。</small></p>'+(p.length?'<button class="btn p" id="go">開始測驗</button>':'<small>還沒有錯題,先去練習吧。</small>')+'</div>';
+ if(p.length)$("#go").onclick=()=>start(p.slice().sort(()=>Math.random()-.5),"wrong");
+}
+function hot(){
+ list=[];const h=Q.filter(q=>st(q.id).w>=2).sort((a,b)=>st(b.id).w-st(a.id).w);
+ app.innerHTML='<div class="card"><b>🔥 錯兩次以上的題目</b><p><small>共 '+h.length+' 題,依錯誤次數排序。</small></p></div>'+(h.map(q=>'<div class="card hot"><div class="meta"><span>'+q[0]+' 第'+q[1]+'題</span><span>錯 '+st(q.id).w+' 次</span></div><div class="q">'+q[2]+'</div><div>✔ ('+"ABCD"[q[4]]+') '+q[3][q[4]]+'</div><div class="ex">'+q[5][q[4]]+'</div></div>').join("")||'<div class="card"><small>目前沒有錯兩次以上的題目。</small></div>')+'<button class="btn" id="rs">清除所有紀錄</button>';
+ $("#rs").onclick=()=>{if(confirm("確定清除所有作答紀錄?")){S={};save();hot()}};
+ if(h.length)app.insertAdjacentHTML("beforeend",' <button class="btn p" id="hq">只測這些題</button>'),$("#hq").onclick=()=>start(h,"wrong");
+}
+const G=[
+["白○與朮類",[["白芷","Angelicae Dahuricae Radix","Angelica dahurica","繖形科","根","coumarins、furocoumarins"],["白芍","Paeoniae Alba Radix","Paeonia lactiflora","毛茛科※","根※","paeoniflorin※"],["白朮","Atractylodis Macrocephalae Rhizoma","Atractylodes macrocephala","菊科","根莖","atractylon"],["蒼朮","Atractylodis Rhizoma※","Atractylodes lancea※","菊科※","根莖※","hinesol、β-eudesmol※"],["白及","Bletillae Rhizoma","Bletilla striata","蘭科","肉質塊莖","glucomannan(黏液質)"]]],
+["黃○類",[["黃耆","Astragali Radix","Astragalus membranaceus","豆科","根","astragalans、astragalosides、calycosin"],["黃芩","Scutellariae Radix","Scutellaria baicalensis","唇形科","根(去周皮)","baicalein、wogonin"],["黃連","Coptidis Rhizoma","Coptis chinensis","毛茛科","根莖","berberine、coptisine"],["黃柏","Phellodendri Cortex","Phellodendron amurense","芸香科","樹皮(去粗皮)","berberine、obakunone"]]],
+["繖形科(Apiaceae=Umbelliferae)",[["當歸","Angelicae Sinensis Radix","Angelica sinensis","繖形科","根","ligustilide、butylidene phthalide、ferulic acid"],["川芎","Chuanxiong Rhizoma","Ligusticum chuanxiong","繖形科","根莖","ligustilide、ligustrazine"],["白芷","Angelicae Dahuricae Radix","Angelica dahurica","繖形科","根","furocoumarins"],["防風","Saposhnikoviae Radix","Saposhnikovia divaricata","繖形科","根","psoralen、bergapten、hamaudol"]]],
+["桑○類(同一植物 Morus alba)",[["桑白皮","Mori Radicis Cortex","Morus alba","桑科","根皮(去栓皮)","morusin、mulberrofuran E"],["桑葉","Mori Folium","同上","桑科","葉","rutin、quercetin"],["桑枝","Mori Ramulus","同上","桑科","嫩枝","morin"],["桑椹","Mori Fructus","同上","桑科","果穗","糖、鞣酸、蘋果酸、維生素 B1/B2/C"]]],
+["睡蓮科:蓮與芡實",[["蓮子","Nelumbinis Semen","Nelumbo nucifera","睡蓮科","種子","quercetin、hyperin、澱粉"],["蓮子心","Nelumbinis Plumula","同上","睡蓮科","幼葉及胚根","nuciferine、liensinine"],["蓮房","Nelumbinis Receptaculum","同上","睡蓮科","花托","—"],["荷葉","Nelumbinis Folium","同上","睡蓮科","葉","—"],["藕節","Nelumbinis Rhizomatis Nodus","同上","睡蓮科","根莖節部","—"],["芡實","Euryales Semen","Euryale ferox","睡蓮科","種仁","維生素 E、euryalins"]]],
+["豆科(Fabaceae=Leguminosae)",[["甘草","Glycyrrhizae Radix et Rhizoma","Glycyrrhiza uralensis","豆科","根及根莖","glycyrrhizin、liquiritin"],["槐花","Sophorae Flos et Flos Immaturus","Sophora japonica","豆科","花及花蕾(槐米)","rutin、quercetin、betulin"],["苦參","Sophorae Flavescentis Radix","Sophora flavescens","豆科","根","matrine、oxymatrine、kurarinol"],["皂莢","Gleditsiae Fructus","Gleditsia sinensis","豆科","果實","gleditsiosides、echinocystic acid"],["皂角刺","Gleditsiae Spina","同上","豆科","棘刺","eriodictyol、ellagic acid"]]],
+["薔薇科與茜草科",[["覆盆子","Rubi Fructus","Rubus chingii","薔薇科","果實","gosnoside、fupenzic acid"],["枇杷葉","Eriobotryae Folium","Eriobotrya japonica","薔薇科","葉","eriojaposide A、maslinic acid、ursolic acid"],["梔子","Gardeniae Fructus","Gardenia jasminoides","茜草科","果實","geniposide、色素 crocin"],["鉤藤","Uncariae Ramulus cum Uncis","Uncaria rhynchophylla","茜草科","帶鉤莖枝","rhynchophylline(indole 生物鹼)"]]],
+["Pla-/Pin- 與其他",[["桔梗","Platycodonis Radix","Platycodon grandiflorus","桔梗科","根","platycodins、inulin"],["半夏","Pinelliae Rhizoma","Pinellia ternata","天南星科","塊莖","pinellin、homogentisic acid"],["車前子","Plantaginis Semen","Plantago asiatica","車前科","種子","aucubin、verbascoside、plantagoside"],["胖大海","Sterculiae Lychnophorae Semen","Sterculia lychnophora","梧桐科","種子","bassorin"]]]
+];
+const G2=[
+["Angelica / Angelicae(當歸、白芷、獨活)",[["當歸","Angelicae Sinensis Radix","Angelica sinensis","繖形科","根","ligustilide、butylidene phthalide、ferulic acid"],["白芷","Angelicae Dahuricae Radix","Angelica dahurica","繖形科","根","coumarins、furocoumarins"],["獨活","Angelicae Pubescentis Radix","Angelica pubescens","繖形科","根","osthole、columbianetin acetate、isopimpinellin"]]],
+["Atractylodes / Atractylodis(白朮、蒼朮)",[["白朮","Atractylodis Macrocephalae Rhizoma","Atractylodes macrocephala","菊科","根莖","atractylon"],["蒼朮","Atractylodis Rhizoma","Atractylodes lancea / chinensis / japonica","菊科","根莖","atractylol、hinesol、β-eudesmol"]]],
+["Sophora / Sophorae(槐花、苦參、山豆根)",[["槐花","Sophorae Flos et Flos Immaturus","Sophora japonica","豆科","花及花蕾(槐米)","rutin、quercetin、betulin、sophoradiol"],["苦參","Sophorae Flavescentis Radix","Sophora flavescens","豆科","根","matrine、oxymatrine、kurarinol"],["山豆根","Sophorae Tonkinensis Radix","Sophora tonkinensis","豆科","根","matrine 型生物鹼(d-matrine)、tonkinochromanes"]]],
+["Gentiana / Gentianae(龍膽、秦艽)",[["龍膽","Gentianae Radix et Rhizoma","Gentiana scabra","龍膽科","根及根莖","gentiopicroside、gentianine、gentianose"],["秦艽","Gentianae Macrophyllae Radix","Gentiana macrophylla","龍膽科","根","gentiopicroside、loganic acid、roburic acid"]]],
+["Polygon- / Polygonat- / Polygal-",[["何首烏","Polygoni Multiflori Radix","Polygonum multiflorum","蓼科","塊根","chrysophanol、emodin、resveratrol、piceid、rhein"],["萹蓄","Polygoni Avicularis Herba","Polygonum aviculare","蓼科","地上部","avicularin、myricetrin、quercetin"],["黃精","Polygonati Rhizoma","Polygonatum sibiricum","百合科","根莖","sibiricosides A/B、黃精多醣"],["遠志","Polygalae Radix","Polygala tenuifolia","遠志科","根","onjisaponin A~G、tenuifolin"]]],
+["Paeonia / Paeoniae / Moutan",[["白芍","Paeoniae Alba Radix","Paeonia lactiflora","毛茛科","根","paeoniflorin"],["赤芍","Paeoniae Rubra Radix","Paeonia lactiflora","毛茛科","根","paeoniflorin、lactiflorin"],["牡丹皮","Moutan Radicis Cortex","Paeonia suffruticosa","毛茛科","根皮","paeonol、paeonolide(新鮮時)"]]],
+["Lycium / Lycii(枸杞子、地骨皮)",[["枸杞子","Lycii Fructus","Lycium chinense","茄科","果實","betaine、kukoamine A、zeaxanthin、carotene"],["地骨皮","Lycii Radicis Cortex","Lycium chinense / barbarum","茄科","根皮","betaine、kukoamine A"]]],
+["Magnolia / Magnoliae(厚朴、辛夷)",[["厚朴","Magnoliae Cortex","Magnolia officinalis","木蘭科","樹皮","magnolol、honokiol、β-eudesmol、magnocurarine"],["辛夷","Magnoliae Flos","Magnolia biondii","木蘭科","未開放花蕾","magnolin、cineole、α-pinene"]]],
+["Gleditsia / Gleditsiae(皂莢、皂角刺)",[["皂莢","Gleditsiae Fructus","Gleditsia sinensis","豆科","果實(皂角)","gleditsiosides、echinocystic acid"],["皂角刺","Gleditsiae Spina","同上","豆科","棘刺","eriodictyol、ellagic acid glycosides"]]],
+["Dioscorea / Dioscoreae(山藥、萆薢)",[["山藥","Dioscoreae Rhizoma","Dioscorea opposita","薯蕷科","根莖","diosgenin、dioscin、batatasins"],["萆薢","Dioscoreae Hypoglaucae Rhizoma","Dioscorea hypoglauca","薯蕷科","根莖","hypoglaucin A、dioscin、diosgenin、yamogenin"]]],
+["Eu- / Epi- / Eri-(字頭相近)",[["杜仲","Eucommiae Cortex","Eucommia ulmoides","杜仲科","樹皮","pinoresinol diglucoside、ulmoside、aucubin"],["芡實","Euryales Semen","Euryale ferox","睡蓮科","種仁","維生素 E、euryalins"],["淫羊藿","Epimedii Herba","Epimedium brevicornum","小蘗科","地上部","icariin(flavonoid)"],["枇杷葉","Eriobotryae Folium","Eriobotrya japonica","薔薇科","葉","eriojaposide A、maslinic acid、ursolic acid"],["吳茱萸","Evodiae Fructus(目錄寫 Euodiae)","Evodia rutaecarpa","芸香科","果實","evodiamine、rutaecarpine"]]],
+["As- 開頭(細辛、天冬、紫菀、黃耆、沙苑子)",[["細辛","Asari Radix et Rhizoma","Asarum heterotropoides","馬兜鈴科","根及根莖","l-asarinin(木脂素)、methyleugenol、pellitorine"],["天冬","Asparagi Radix","Asparagus cochinchinensis","百合科","塊根","asparagine、smilagenin、β-sitosterol"],["紫菀","Asteris Radix et Rhizoma","Aster tataricus","菊科","根及根莖","shionosides、shionone、quercetin"],["黃耆","Astragali Radix","Astragalus membranaceus","豆科","根","astragalans、astragalosides、calycosin"],["沙苑子","Astragali Complanati Semen","Astragalus complanatus","豆科","種子","astragalin、calycosin、ononin"]]],
+["Ziziphus(大棗、酸棗仁)",[["大棗","Jujubae Fructus(講義內頁寫 Zizyphus Fructus)","Ziziphus jujuba","鼠李科","果實","zizybeoside、spinosin、acylspinosins、oleanolic acid"],["酸棗仁","Ziziphi Spinosae Semen","Ziziphus jujuba","鼠李科","種子","jujubosides、betulin、frangufoline"]]],
+["Pla- / Pin-(桔梗、半夏、車前子、柏子仁)",[["桔梗","Platycodonis Radix","Platycodon grandiflorus","桔梗科","根","platycodins、inulin"],["半夏","Pinelliae Rhizoma","Pinellia ternata","天南星科","塊莖","pinellin、homogentisic acid"],["車前子","Plantaginis Semen","Plantago asiatica","車前科","種子","aucubin、verbascoside、plantagoside"],["柏子仁","Platycladi Semen","Platycladus orientalis","柏科","種仁","linoleic acid、cedrol、platydiol"]]],
+["Ligust- (女貞子、川芎)",[["女貞子","Ligustri Lucidi Fructus(內頁寫 Privet Fructus)","Ligustrum lucidum","木犀科","果實","ligustroside、ursolic acid"],["川芎","Chuanxiong Rhizoma","Ligusticum chuanxiong","繖形科","根莖","ligustilide、ligustrazine"]]],
+["Sch- / Scu- / Sal-(荊芥、五味子、黃芩、丹參)",[["荊芥","Schizonepetae Herba","Schizonepeta tenuifolia","唇形科","全草、花穗","d-menthone、l-pulegone、caryophyllene"],["五味子","Schisandrae Fructus","Schisandra chinensis","木蘭科","果實","schizandrin、gomisins(lignans)"],["黃芩","Scutellariae Radix","Scutellaria baicalensis","唇形科","根(去周皮)","baicalein、wogonin"],["丹參","Salviae Miltiorrhizae Radix et Rhizoma","Salvia miltiorrhiza","唇形科","根及根莖","tanshinones、Mg lithospermate B"]]]
+];
+function conf(){list=[];app.innerHTML='<div class="card"><b>基原/拉丁生藥名相近整理</b><p><small>表格可左右滑動。資料依講義整理。</small></p></div>'+G2.concat(G.slice(3,5)).map(g=>'<div class="card"><b>'+g[0]+'</b><div class="tw"><table><tr><th>中藥</th><th>拉丁生藥名</th><th>基原</th><th>科別</th><th>用部</th><th>成分</th></tr>'+g[1].map(r=>'<tr>'+r.map(c=>'<td>'+c+'</td>').join('')+'</tr>').join('')+'</table></div></div>').join('')}
+const G3=[
+["補氣",[["★黃耆","Astragali Radix・豆科・根","補氣固表、瘡癰聖藥;Cycloartane 三萜 astragalosides;玉屏風散(黃耆+白朮+防風)、當歸補血湯(當歸+黃耆);蒙古黃耆學名含 var. mongholicus;多醣增強免疫;不含二萜"],["大棗","Jujubae Fructus(內頁 Zizyphus)・鼠李科・果實","spinosin、acylspinosins(flavone C-glycoside)鎮靜;補氣藥性味甘"],["山藥","Dioscoreae Rhizoma・薯蕷科・根莖","diosgenin、dioscin、batatasins"],["甘草","Glycyrrhizae Radix et Rhizoma・豆科","生藥名要寫 et Rhizoma;glycyrrhizin、liquiritin"],["人參","Ginseng Radix et Rhizoma・五加科","萃菔子能減弱其補氣(相惡);與三七生藥名不要混"]]],
+["補血",[["★當歸","Angelicae Sinensis Radix・繖形科・根","ligustilide、butylidene phthalide、ferulic acid(n-butyl benzoate 非主成分);神農本草經中品;補血活血、潤腸通便"],["地黃","Rehmanniae Radix・玄參科・根/根莖","catalpol(iridoid 單萜苷,C1 接 glucose);鮮地黃含 stachyose;生清熱涼血、熟滋陰補血"],["白芍","Paeoniae Alba Radix・毛茛科・根","paeoniflorin(單萜苷);養血斂陰、緩中止痛"],["★何首烏","Polygoni Multiflori Radix・蓼科・塊根(非塊莖)","anthraquinone(chrysophanol、emodin)、stilbene(resveratrol、piceid);生用潤腸通便;性微溫、味苦甘澀"],["阿膠","Asini Corii Colla","動物性中藥;Gelatin、Collagen"]]],
+["補陰",[["★枸杞子","Lycii Fructus・茄科・果實","zeaxanthin、carotene、betaine;kukoamine A 降血壓;補血(地骨皮則清熱涼血);明目"],["★知母","Anemarrhenae Rhizoma・百合科・根莖","timosaponin(steroid saponin);mangiferin(xanthone C-glycoside);治傷寒煩熱"],["石斛","Dendrobii Caulis・蘭科・莖","dendrobine:止痛、解熱、降血糖、降血壓(無抗真菌)"],["女貞子","Privet Fructus(目錄 Ligustri Lucidi)・木犀科・果實","ligustroside(iridoid)、ursolic acid"],["黃精","Polygonati Rhizoma・百合科・根莖","sibiricosides A/B(steroidal saponin)、黃精多醣"]]],
+["補陽",[["★杜仲","Eucommiae Cortex・杜仲科・樹皮","pinoresinol diglucoside(降血壓活性成分);炮炙要炒到斷絲;lignan+iridoid+三萜;安胎;澱粉不多(葛根才高)"],["★淫羊藿","Epimedii Herba・小蘗科・地上部(非全草)","icariin(flavonoid;C3 接 rhamnosyl、C7 接 glucosyl);phytoestrogen 雄性激素樣作用;補腎陽強筋骨"],["★續斷","Dipsaci Radix・續斷科・根","cantleyine 鬆弛子宮平滑肌;iridoid(sweroside、loganin);三萜皂苷 hederagenin"],["肉蓯蓉","Cistanches Herba・列當科・肉質莖","echinacoside、acteoside(phenylethanoid glycoside)"],["鎖陽","Cynomorii Herba・鎖陽科・肉質莖","ursolic acid、β-sitosterol、anthocyanidin"],["沙苑子","Astragali Complanati Semen・豆科・種子","astragalin(flavonoid glycoside)、calycosin"],["補骨脂","豆科","補腎溫脾、固精縮尿"],["冬蟲夏草","Cordyceps","補陽藥中唯一真菌類"]]],
+["溫裏",[["★附子","Aconiti Tuber・毛茛科・旁生塊根","aconitine(diterpenoid alkaloid 雙萜生物鹼);有毒需炮製;祛寒溫中、回陽救逆;孕婦忌服"],["吳茱萸","Evodiae Fructus・芸香科・果實","evodiamine、rutaecarpine(indole alkaloid)"],["細辛","Asari Radix et Rhizoma・馬兜鈴科・根及根莖","l-asarinin(lignan,不具揮發性);地上部含馬兜鈴酸(腎毒);反藜蘆"],["丁香","Caryophylli Flos・桃金孃科・花蕾","基原 Syzygium aromaticum;eugenol;clove oil 止痛"]]],
+["理氣",[["陳皮","Citri Reticulatae Pericarpium・芸香科・果皮","hesperidin(黃酮);d-limonene;燥濕化痰;二陳湯"]]],
+["平肝息風",[["天麻","Gastrodiae Rhizoma・蘭科・塊莖","gastrodin;平肝息風藥"],["★鉤藤","Uncariae Ramulus cum Uncis・茜草科・帶鉤莖枝","rhynchophylline(indole alkaloid):降血壓、抗心律不整、安神、抗癫癇(無抗發炎)"]]],
+["安神",[["酸棗仁","Zizyphi Spinosae Semen・鼠李科・種子","jujubosides、betulin、frangufoline;寧心安神、斂汗"],["柏子仁","Platycladi Semen・柏科・種仁","linoleic acid、cedrol;潤腸通便"],["遠志","Polygalae Radix・遠志科・根","onjisaponin A~G、tenuifolin"]]],
+["收澀",[["★覆盆子","Rubi Fructus・薔薇科・果實(非種子)","固精縮尿;labdane 二萜 goshonoside;fupenzic acid;神仙六子丸組成之一(菟絲子、枸杞子、蛇床子、五味子、金鈴子、覆盆子);基原科 Rosaceae"],["訶子","Chebulae Fructus・使君子科・果實(非種子)","tannin(chebulinic acid)、sennoside A;斂肺澀腸、降火利咽、開音"],["五味子","Schisandrae Fructus・木蘭科・果實","lignans(schizandrin、gomisins);斂肺鎮咳、斂汗"],["蓮子","Nelumbinis Semen・睡蓮科","quercetin、hyperin;蓮子心 nuciferine"],["芡實","Euryales Semen・睡蓮科・種仁","維生素 E、euryalins"]]],
+["解表(辛溫)",[["★荊芥","Schizonepetae Herba・唇形科・全草/花穗","d-menthone、l-pulegone(單萜);caryophyllene(倍半萜,揮發性);炒黑→荊芥炭止血"],["★辛夷","Magnoliae Flos・木蘭科・未開放花蕾","基原 Magnolia biondii;通九窩、治鼻塞鼻淕;magnolin"],["防風","Saposhnikoviae Radix・繖形科・根","祛風勝濕;coumarins;玉屏風散組成"],["白芷","Angelicae Dahuricae Radix・繖形科・根","coumarins、furocoumarins(不含 flavonoids);基原 Angelica dahurica"],["麻黃","Ephedrae Herba","ephedrine:解熱、中樞興奮(非降血壓)"],["蒼耳子","果實","辛溫解表藥"]]],
+["解表(辛涼)",[["★柴胡","Bupleuri Radix・繖形科・根","辛涼解表(非辛溫)、和解表裡、疏肝解鬱;saikosaponins;逍遙散組成;保肝"],["★葛根","Puerariae Radix・豆科・根","puerarin(isoflavone):降血壓、抑制心搏過速、降膽固醇(無抑制血管新生);澱粉含量最高;台灣有產;發汗解熱"],["薄荷","Menthae Herba・唇形科・地上部","l-menthol;不宜久煎、應後下"]]],
+["化痰止咳平喘",[["★半夏","Pinelliae Rhizoma・天南星科・塊莖","homogentisic acid(麻舌,水漂炮製去除);pinellin 蛋白;反烏頭"],["桔梗","Platycodonis Radix・桔梗科・根","platycodins(皂苷);inulin(菊醣)"],["貝母","Fritillariae Bulbus・百合科・鱗莖","steroidal alkaloid:peimine、peiminine"],["胖大海","Sterculiae Lychnophorae Semen・梧桐科・種子","bassorin;潤腸通便、潤燥化痰"],["皂莢/皂角刺","Gleditsiae Fructus / Spina・豆科","echinocystic acid;皂莢乙醇萍取抗血管新生;eriodictyol"],["枇杷葉","Eriobotryae Folium・薔薇科・葉","eriojaposide A(特有成分);maslinic acid、ursolic acid"]]],
+["利水滲濕/芳香化濕",[["茯苓","Poria・多孔菌科 Polyporaceae・菌核","pachymic acid(lanostane 型三萜)"],["車前子","Plantaginis Semen・車前科・種子","基原 Plantago asiatica;種皮 hydrocolloid 潤腸(非增強免疫);aucubin"],["白朮","Atractylodis Macrocephalae Rhizoma・菊科・根莖","atractylon(倍半萜);燥濕補脾安胎"],["蒼朮","Atractylodis Rhizoma・菊科・根莖","hinesol、atractylol、β-eudesmol;屬芳香化濕藥"],["厚朴","Magnoliae Cortex・木蘭科・樹皮(非根皮)","magnolol、honokiol(lignan);益腸胃、燥濕、行氣"]]],
+["祛風濕",[["五加皮","Acanthopanacis Radicis Cortex・五加科・根皮","syringin β(phenylpropanoid glycoside)"],["獨活","Angelicae Pubescentis Radix・繖形科・根","osthole、columbianetin acetate"],["秦艽","Gentianae Macrophyllae Radix・龍膽科・根","gentiopicroside、loganic acid"]]],
+["活血化瘀",[["★川芎","Chuanxiong Rhizoma・繖形科・根莖","ligustrazine:降血壓、抗心律不整、抑制子宮收縮(無免疫抑制);ligustilide(phthalide);增加冠狀動脈血流"],["★延胡索","Corydalis Tuber・罌粟科・塊莖","l-THP(isoquinoline):中樞抑制、鎮痛鎮癇;dehydrocorydaline 抗胃潰瘍;安中散;孕婦忌用"],["丹參","Salviae Miltiorrhizae Radix et Rhizoma・唇形科","tanshinones;Mg lithospermate B(phenylpropanoid oligomer);祛瘀生新;反藜蘆"],["益母草","Leonuri Herba・唇形科・開花期全草","leonurine 促子宮收縮;stachydrine(pyrrolidine)"]]],
+["止血",[["★槐花","Sophorae Flos et Flos Immaturus・豆科・花及花蕾(槐米)","quercetin(五個酚性 OH、抗凝血)、rutin(醣基在 C3);betulin、sophoradiol;涼血止血"],["★艾葉","Artemisiae Argyi Folium・菊科・葉","暖子宮、止諸血、治崩漏帶下"],["白及","Bletillae Rhizoma・蘭科・塊莖","glucomannan(黏液質);不宜加熱"]]],
+["清熱解毒",[["★連翹","Forsythiae Fructus・木犀科・果實(非花蕾)","arctiin、forsythin(=phillyrin)、matairesinoside 為 lignan 苷;forsythide 為單萜;forsythiaside;瘡家聖藥"],["金銀花","Lonicerae Japonicae Flos・忍冬科・花蕾","chlorogenic acid 含量最高;loganin、lonicerin;散熱解毒"],["板藍根","Isatidis Radix・十字花科・根","indican、indirubin(治 CML)"],["敗醬草","Patriniae Herba・敗醬科・全草","排膿破血;scabiosides、villoside"],["山豆根","Sophorae Tonkinensis Radix・豆科・根","matrine 型生物鹼;抗 B 型肝炎"]]],
+["清熱瀉火",[["★梔子","Gardeniae Fructus・茜草科・果實","geniposide(單萜 iridoid 苷);crocin 色素;苦寒"],["夏枯草","唇形科・果穗(花序)","使用部位為果穗"]]],
+["清熱燥濕",[["★黃連","Coptidis Rhizoma・毛茛科・根莖","berberine、coptisine(isoquinoline);清熱燥濕、瀉火解毒;三黃瀉心湯(黃芩+黃連+大黃);基原 Coptis chinensis"],["★黃芩","Scutellariae Radix・唇形科・根(去周皮)","baicalein、wogonin(類黃酮)"],["黃柏","Phellodendri Cortex・芸香科・樹皮","berberine、obakunone"],["★龍膽","Gentianae Radix et Rhizoma・龍膽科・根及根莖","gentiopicroside(secoiridoid,單萜類);gentianine 抗發炎、降血壓;苦寒歸肝膽;matrine 不是龍膽的"],["苦參","Sophorae Flavescentis Radix・豆科・根","matrine、oxymatrine;反藜蘆"]]],
+["清熱涼血/虛熱",[["★牡丹皮","Moutan Radicis Cortex・毛茛科・根皮","鮮根 paeonolide→水解得 paeonol;paeoniflorin(單萜苷);破積血、通經脈"],["★紫草","Lithospermi / Arnebiae Radix・紫草科・根","shikonin(naphthoquinone 萘醌);shikonin 與 alkannin 為 enantiomer"],["赤芍","Paeoniae Rubra Radix・毛茛科・根","paeoniflorin、lactiflorin"],["地骨皮","Lycii Radicis Cortex・茄科・根皮","kukoamine A、betaine;清熱涼血"]]],
+["其他",[["蛇床子","Cnidii Fructus・繖形科・果實(非種子)","osthole(香豆素);抗陰道滴蟲"]]]
+];
+function topics(){list=[];app.innerHTML='<div class="card"><b>有考過的藥(依講義章節)</b><p><small>★=高頻考點(題庫中出現多次)。點章節展開。括號內的「非」是常見陷阱。</small></p></div>'+G3.map(c=>'<details class="card"><summary>'+c[0]+'(共 '+c[1].length+' 味)</summary>'+c[1].map(h=>'<div class="hb"><b>'+h[0]+'</b>'+pbtn(h[0])+'<small>'+h[1]+'</small><div class="pt">'+h[2]+'</div></div>').join('')+'</details>').join('')}
+let tm="chap";
+const SUB=[["chap","章節"],["comp","成分"],["part","部位"],["fam","科別"],["form","方劑"],["trap","陷阱"],["kou","口訣"],["pei","總整理"]];
+const D={
+comp:[
+["黃酮類 Flavonoid",[["flavone / flavonol","淫羊藿 icariin(C3 rhamnosyl、C7 glucosyl)、槐花 quercetin/rutin(quercetin 有 5 個酚性 OH、抗凝血;rutin 醣基在 C3)、黃芩 baicalein/wogonin、沙苑子 astragalin、黃耆 calycosin、陳皮 hesperidin、蒺藜 tribuloside、蓮子 quercetin/hyperin"],["isoflavone","葛根 puerarin/daidzein/daidzin(puerarin:降血壓、抑制心搏過速、降膽固醇)"],["C-glycoside","大棗/酸棗仁 spinosin(flavone C-glycoside,不是 O-glycoside)、知母 mangiferin(xanthone C-glycoside)"]]],
+["環烯醚萜 Iridoid(單萜)",[["iridoid glycoside","地黃 catalpol(C1 接 glucose)、梔子 geniposide、續斷 sweroside/loganin、金銀花 loganin、杜仲 aucubin/ulmoside、車前子 aucubin、白花敗醬 villoside、女貞子 ligustroside"],["secoiridoid","龍膽 gentiopicroside、秦艽 gentiopicroside/loganic acid(都是龍膽科)"],["不是 iridoid","acteoside 屬 phenylethanoid"]]],
+["單萜 Monoterpene",[["monoterpene glycoside","白芍/赤芍/牡丹皮 paeoniflorin(不是二萜)、連翹 forsythide"],["揮發油單萜","荊芥 d-menthone/l-pulegone、薄荷 l-menthol"]]],
+["木脂素 Lignan",[["","杜仲 pinoresinol diglucoside(降血壓)、連翹 arctiin/forsythin(=phillyrin)/matairesinoside、厚朴 magnolol/honokiol、辛夷 magnolin、五味子 schizandrin/gomisins、細辛 l-asarinin(非揮發)"]]],
+["苯乙醇苷 / 苯丙素",[["phenylethanoid","肉蓯蓉 echinacoside/acteoside、玄參 acteoside、車前子 verbascoside、連翹 forsythiaside"],["phenylpropanoid","五加皮 syringin β、丹參 Mg lithospermate B(phenylpropanoid oligomer)"]]],
+["醌類 Quinone",[["anthraquinone","何首烏 chrysophanol/emodin、大黃 rhein、訶子 sennoside A(dianthrone)"],["naphthoquinone","紫草 shikonin/alkannin(互為 enantiomer)"]]],
+["生物鹼 Alkaloid",[["isoquinoline","延胡索 l-THP/dehydrocorydaline、黃連 berberine/coptisine、黃柏 berberine"],["indole","鉤藤 rhynchophylline、吳茱萸 evodiamine/rutaecarpine"],["diterpenoid","附子 aconitine"],["steroidal","貝母 peimine/peiminine"],["quinolizidine","苦參 matrine/oxymatrine、山豆根 matrine 型"],["其他","續斷 cantleyine(鬆弛平滑肌)、枸杞 kukoamine A(降血壓)、石斛 dendrobine(止痛解熱降血糖降血壓)、龍膽 gentianine(抗發炎降血壓)、益母草 leonurine/stachydrine(pyrrolidine)"]]],
+["三萜 Triterpenoid",[["","黃耆 cycloartane astragalosides、茯苓 lanostane pachymic acid、柴胡 saikosaponins、桔梗 platycodins、遠志 onjisaponin、甘草 glycyrrhizin、皂莢 echinocystic acid、酸棗仁 jujubosides/betulin、槐花 betulin/sophoradiol、枇杷葉 maslinic/ursolic acid(eriojaposide A 是 apocarotenoid)"]]],
+["固醇皂苷 Steroid",[["","知母 timosaponin、山藥/萆薢 diosgenin/dioscin、黃精 sibiricosides、天冬 smilagenin;daucosterol(胡蘿蔔苷)是甾醇苷"]]],
+["倍半萜 / 二萜",[["sesquiterpene","白朮 atractylon、蒼朮 hinesol/β-eudesmol、荊芥 caryophyllene、厚朴 β-eudesmol"],["diterpene","覆盆子 labdane goshonoside、丹參 tanshinones(黃耆不含二萜)"]]],
+["香豆素 / 苯酞",[["coumarin","白芍 coumarins/furocoumarins(無 flavonoids)、獨活/蛇床子 osthole、防風 psoralen/bergapten"],["phthalide","當歸/川芎 ligustilide、butylidene phthalide(當歸無 n-butyl benzoate)"]]],
+["多醣 / 其他",[["","黃耆 astragalans、胖大海 bassorin、白及 glucomannan、桔梗 inulin、葛根 starch、阿膠 gelatin/collagen、枸杞 zeaxanthin、梔子 crocin、丁香 eugenol、肉桂 cinnamaldehyde、半夏 homogentisic acid/pinellin"]]]
+],
+part:[
+["根類",[["根","黃耆、當歸、桔梗、葛根、柴胡、防風、白芍、白芷、黃芩、苦參、續斷、紫草、赤芍、遠志、秦艽、獨活"],["根及根莖","龍膽、細辛、紫菀、甘草、人參、丹參"],["根莖","川芎、白朮、蒼朮、黃連、黃精、山藥"],["塊根","何首烏(不是塊莖)、天冬、麥門冬、附子(旁生塊根)"],["塊莖","延胡索、半夏、天麻、白及(肉質塊莖)"]]],
+["皮類",[["樹皮","杜仲、厚朴(不是根皮)、黃柏、肉桂"],["根皮","牡丹皮、地骨皮、桑白皮、五加皮"],["果皮","陳皮"]]],
+["果實 / 種子",[["果實","覆盆子(不是種子)、訶子(不是種子)、梔子、連翹、枸杞子、吳茱萸、五味子、蛇床子(不是種子)、蒼耳子、蒺藜、皂莢、女貞子"],["種子","車前子、胖大海、酸棗仁、柏子仁(種仁)、蓮子、芡實(種仁)、沙苑子"]]],
+["花 / 地上部 / 其他",[["花、花蕾","辛夷(未開放花蕾)、金銀花(花蕾)、槐花(花及花蕾)、丁香(花蕾)"],["全草 / 地上部","荊芥(全草、花穗)、薄荷(地上部)、淫羊藿(地上部,不是全草)、益母草(開花期全草)、敗醬草、蒲公英(全草)、夏枯草(果穗)"],["葉","艾葉、枇杷葉、桑葉"],["莖","鉤藤(帶鉤莖枝)、肉蓯蓉/鎖陽(肉質莖)、石斛"],["其他","茯苓/豬苓(菌核,不是果實)、阿膠(動物)、冬蟲夏草(真菌)"]]]
+],
+fam:[
+["科別分組(科名兩種寫法都要認)",[["繖形科 Apiaceae=Umbelliferae","當歸、川芎、白芷、防風、柴胡、獨活、蛇床子"],["唇形科 Lamiaceae=Labiatae","丹參、荊芥、薄荷、黃芩、益母草、夏枯草"],["豆科 Fabaceae=Leguminosae","黃耆、甘草、葛根、槐花、苦參、山豆根、補骨脂、沙苑子、皂莢"],["菊科 Asteraceae=Compositae","白朮、蒼朮、艾葉、蒲公英、紫菀"],["毛茛科 Ranunculaceae","附子、黃連、白芍、赤芍、牡丹皮"],["百合科 Liliaceae","知母、黃精、麥門冬、天冬、貝母"],["薔薇科 Rosaceae","覆盆子、枇杷葉、杏仁"],["茜草科 Rubiaceae","梔子、鉤藤"],["木蘭科 Magnoliaceae","厚朴、辛夷、五味子"],["睡蓮科 Nymphaeaceae","蓮子、芡實"],["木犀科 Oleaceae","連翹、女貞子"],["鼠李科 Rhamnaceae","大棗、酸棗仁"],["蘭科 Orchidaceae","天麻、石斛、白及"],["芸香科 Rutaceae","陳皮、黃柏、吳茱萸"],["龍膽科 Gentianaceae","龍膽、秦艽"],["其他單科","五加科:人參、五加皮;馬兜鈴科:細辛;天南星科:半夏;桔梗科:桔梗;罌粟科:延胡索;十字花科:板藍根;忍冬科:金銀花;紫草科:紫草;杜仲科:杜仲;續斷科:續斷;小蘗科:淫羊藿;列當科:肉蓯蓉;鎖陽科:鎖陽;使君子科:訶子;梧桐科:胖大海;車前科:車前子;多孔菌科:茯苓、豬苓;玄參科:地黃;蓼科:何首烏;桑科:桑葉、桑白皮"]]]
+],
+form:[
+["方劑組成(講義有列)",[["玉屏風散","黃耆 + 白朮 + 防風;治表虛自汗"],["當歸補血湯","當歸 + 黃耆;補氣生血"],["三黃瀉心湯","黃芩 + 黃連 + 大黃;瀉火解毒"],["黃連解毒湯","黃芩 + 黃連 + 黃柏 + 梔子;清熱解毒"],["逍遙散","柴胡、當歸、白芍、白朮、茯苓、甘草、生薑、薄荷;疏肝解鬱、健脾養血"],["神仙六子丸","菟絲子、枸杞子、蛇床子、五味子、金鈴子、覆盆子(覆盆子是組成之一)"],["安中散","桂皮、延胡索、牡蚣、小茨香、砂仁、甘草、良薩"],["二陳湯","半夏、陳皮、茯苓、甘草"],["銀羹散 / 真人活命飲","金銀花(講義列為方劑)"]]]
+],
+trap:[
+["使用部位陷阱(偏換字)",[["果實被換成種子","覆盆子、訶子、蛇床子都是果實"],["樹皮被換成根皮","厚朴=樹皮;牡丹皮=根皮"],["塊根被換成塊莖","何首烏=塊根"],["地上部被換成全草","淫羊藿=地上部"],["果實被換成花蕾","連翹=果實;金銀花=花蕾"],["菌核被換成果實","豬苓=菌核"]]],
+["科別 / 學名陷阱",[["益母草","唇形科(不是芸香科)"],["龍膽","龍膽科(不是鳶尾科)"],["茯苓","多孔菌科 Polyporaceae(別和 Polygalaceae/Polygonaceae/Polypodiaceae 混)"],["枇杷葉 / 覆盆子","薔薇科(不是豆科)"],["牡丹皮 / 白芍","毛茛科(不是薔薇科)"],["陳皮 / 黃柏","芸香科(不是茜草科)"],["菊花名稱","荊芥學名 Schizonepeta tenuifolia(不是 Nepeta)"],["甘草","Glycyrrhizae Radix et Rhizoma(要寫 et Rhizoma)"],["黃耆","蒙古黃耆學名要有 var. mongholicus"],["車前子","基原 Plantago asiatica(不是 ovata/psyllium/lanceolata)"],["地骨皮","Lycii Radicis Cortex(不是 Paeoniae)"],["黃連","Coptidis Rhizoma;Coptis chinensis;毛茛科"]]],
+["成分歸屬陷阱",[["arctiin","是 lignan 苷,不是 flavonoid"],["paeoniflorin","是單萜苷,不是二萜"],["forsythide","是單萜,不是 lignan"],["shikonin / alkannin","是 enantiomer,不是 diastereomer"],["icariin","是 flavonoid,不是 lignan"],["spinosin","是 C-glycoside,不是 O-glycoside"],["l-asarinin","是 lignan,不具揮發性"],["matrine","是苦參的,不是龍膽的"],["hinesol","是蒼朮的,不是覆盆子的"],["geniposide","是單萜 iridoid"],["pachymic acid","茯苓 lanostane 型三萜"]]],
+["藥理 / 功效陷阱",[["葛根 puerarin","體內無抑制血管新生的敘述"],["川芎 ligustrazine","無免疫抑制"],["鉤藤 rhynchophylline","無抗發炎"],["柴胡","辛涼解表,不是辛溫"],["車前子多醣","潤腸,不是增強免疫"],["石斛 dendrobine","無抗真菌"],["黃耆","不含二萜"]]],
+["炮製 / 特殊注意",[["杜仲","炒到斷絲(不是白絲相連)"],["半夏","水漂去 homogentisic acid"],["薄荷","後下、不宜久煎"],["荊芥","炒黑成荊芥炭→止血"],["白及","不宜加熱(保留黏液質)"],["附子","有毒,需炮製"],["反藜蘆","細辛、丹參、苦參、玄參、貝母類"],["孕婦忌服","附子、延胡索、厚朴、肉桂"]]]
+]};
+Q.forEach(q=>{q.t=q[2]+q[3].join("|")+q[5].join("|")});
+const HN=[...new Set(G3.flatMap(c=>c[1].flatMap(h=>h[0].replace("★","").split("/"))))];
+function pb(names){const n=Q.filter(q=>names.some(x=>q.t.includes(x))).length;return n?'<button class="btn pb" data-n="'+names.join(",")+'" style="padding:2px 8px;font-size:12px;margin-left:8px">練習 '+n+'</button>':''}
+function pbtn(t){return pb(t.replace("★","").split("/"))}
+function pbtn2(t){const ns=HN.filter(n=>t.includes(n));return ns.length&&ns.length<=8?pb(ns):''}
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest(".pb");if(!b)return;const ns=b.dataset.n.split(",");const l=Q.filter(q=>ns.some(x=>q.t.includes(x)));if(!l.length)return;start(l,"year");document.querySelectorAll(".tabs button").forEach(x=>x.classList.toggle("on",x.dataset.t==="home"))});
+D.kou=[
+["說明",[["","資料來源:蛙蛙常用中藥(最後幾頁)。口訣文字是依掃描圖辨識,可能有錯字,請對照原圖確認。"]]],
+["Iridoid glycoside(單萜)",[["成分","地黃 Catapol(catalpol)、女貞子 Ligustroside、續斷 Sweroside/Loganin、玄參 Harpagide、車前子 Aucubin、秦艽 Gentiopicroside、巴戟天 Monotropein、杜仲 Aucubin/Ulmoside、金銀花 Loganin、山茱萸 Sweroside/Loganin"],["口訣","艾瑞帝皇女矯選車情急鍍金衫"]]],
+["單萜 Monoterpene",[["藥材與成分","紫菀 Shinosides;補骨脂 Bakuchiol;陳皮 d-limonene;龍膽 Gentiopicroside(secoiridoid type);紫蘇 Perillaldehyde;艾葉 Cineole;赤芍 Lactiflorin/Paeoniflorin;菊花 Camphor;車前子 Aucubin(iridoid type);續斷 Sweroside(iridoid type);白芍 Paeoniflorin;荊芥 d-Menthone;梔子 Geniposide;秦艽 Gentiopicroside(secoiridoid type);連翹 Forsythide;牡丹皮 Paeoniflorin;巴戟天 Monotropein(iridoid type);山茱萸 Loganin;玄參 Harpagide;香附 Pinene/Cineole;薄荷 Menthol"],["口訣","單挑頑固成龍只覺吃 菊花前短白精子,就連母 單雞雞都發出豬叫聲附和"]]],
+["雙萜 Diterpene",[["藥材與成分","肉桂 Cinnzeylanine(ketal type);附子 Aconine(生物鹼);銀杏 Ginkgolide(白果亦有);覆盆子 Goshonoside(labdane type);丹參 Tanshinone;蘇木 Caesalpins"],["口訣","雙貴婦淫負擔目(桂附銀覆丹木)"]]],
+["倍半萜 Sesquiterpene",[["藥材與成分","旋覆花 Inulicin;青蒿 Artemisinin;蒲公英 Mongolicumin;蒼朮 Atractylon;薑黃 Tumerone/Zingiberone;沉香 Baimuxinol;香附 Cyperone;蒼耳子 Xanthatin;澤瀉 Orientalol/Alismol(guaiane type);白朮 Atractylon;荊芥 Caryophyllene;艾葉 Elemol;石斛 Dendrobine(生物鹼)"],["口訣","富豪被公主將香膳洩白精 Yes!"]]],
+["三萜 Triterpene(一)",[["藥材與成分","三七 Ginsenoside;人參 Ginsenoside;遠志 Onjisaponin;續斷 Dipsacus saponin A;柴胡 Saikosaponins;山茱萸 Ursolic acid;西洋參 Ginsenoside;杜仲 Ursolic acid;甘草 Glycyrrhizin;敗醬草 Scabiosides;鎖陽 Ursolic acid;竹茹 Friedelan-3-one;威靈仙 Clematichinenoside;桑白皮 Amyrin"],["口訣","三個人有秩序拆山豬羊肚 吵架吃洋菇先桑一下"]]],
+["三萜 Triterpene(二)",[["藥材與成分一","蒲公英 Taraxasterol;酸棗仁 Betulinic acid;槐花 Betulin;鎖陽 Ursolic acid;升麻 Cimigenol/Dahurinol;續斷 Dipsacus saponin;黃耆 Astragaloside(cycloartane type);茯苓 Pachymic acid(lanostane type);澤瀉 Alisol(protostane type);艾葉 Lupenone;大棗 Oleanolic acid;夏枯草 Ursolic acid"],["口訣一","三工人壞!養馬續欺負則愛大哭"],["藥材與成分二","栝樓根 Cucurbitacin;牛膝 Oleanolic acid;皂莢 Gleditsiosides;紫菀 Shionone;射干 Belamcandal;淡竹葉 Arundoin;木通 Akeboside;威靈仙 Clematichinenoside;瞿麥 Dianchinenoside(原圖寫瞿參);枇杷葉 Maslinic acid;覆盆子 Fupenzic acid;女貞子 Ursolic acid;桔梗 Platycodin(三萜皂苷)"],["口訣二","蝎牛夾子簡單通靈出小妾皮膚沒貞潔"]]],
+["固醇類與五環三萜",[["六環固醇(類固醇合成原料)","知母 Timosaponin;瓊麻 Agave:Hecogenin;薯蕷 Dioscorea:Diosgenin;菝葜 Smilax:Sarsasapogenin"],["四環固醇性三萜","人參 Ginsenoside Rg1"],["五環三萜(口訣:剛才找女同志結拜)","甘草 Glycyrrhizin;柴胡 Saikosaponin;酸棗仁 Jujuboside;女貞子 Ursolic acid;木通 Akeboside;遠志 Onjisaponin;桔梗 Platycodin;敗醬草 Scabioside"]]]
+];
+D.pei=[
+["說明",[["","資料來源:蛙蛙常用中藥。部位表和講義有幾處不同(夏枯草、淫羊藿、半夏),考試以題目標準答案為準,見下方提醒。"],["部位提醒","夏枯草:本表列在花蕾,但歷屆題庫(113-1 第 31 題、108-1 第 153 題)答案是花序或果穗。淫羊藿:本表列在葉,講義與題庫(111-1 第 79 題)是地上部。半夏:本表列在根莖,講義是塊莖。"]]],
+["藥用部位總整理",[["根","黨參、黃耆、當歸、白芍、巴戟天、續斷、細辛、遠志、白芷、防風、柴胡、桔梗、前胡、獨活、秦艽、丹參、牛膝、板藍根、山豆根、黃芩、苦參、玄參、紫草、赤芍、西洋參"],["根莖","山藥、知母、黃精、高良薑、炮薑、香附、生薑、升麻、半夏、白朮、粉萆薢、蒼朮、川芎、薑黃、射干、蘆根、黃連、龍膽"],["根及根莖","羌活、紫菀、威靈仙、大黃、三七、甘草、人參"],["塊根","地黃、何首烏、麥門冬、天門冬、附子、烏藥、葛根、百部、栝樓根"],["塊莖","天麻、澤瀉、延胡索、白及"],["莖","石斛、鉤藤、麻黃、皂角刺、竹茹、燈芯草、桑寄生、木通"],["鱗莖","百合、蔥白、貝母"],["肉質莖","肉蓯蓉、鎖陽"],["木部","沉香、蘇木"],["全草","荊芥、益母草、蒲公英、敗醬草"],["地上部","薄荷、萹蓄、瞿麥、廣藿香、青蒿"],["葉","淫羊藿、枇杷葉、蘆薈、艾葉、側柏葉、淡竹葉"],["葉、莖、果實","紫蘇"],["花","菊花、旋覆花、紅花、金銀花"],["花蕾","丁香、辛夷、夏枯草"],["樹皮","杜仲、肉桂、厚朴、黃柏"],["根皮","桑白皮、五加皮、牡丹皮、地骨皮"],["果皮","陳皮"],["種子","白扁豆、沙苑蒺藜、菟絲子、酸棗仁、柏子仁、蓮子、芡實、淡豆豉、萊菔子、胖大海、白果、杏仁、車前子、桃仁、檳榔"],["果實","吳茱萸、山茱萸、覆盆子、蒼耳子、牛蒡子、蔓荊子、皂莢、連翹、梔子、穀芽、枳實(幼果)"],["成熟果實","大棗、枸杞子、女貞子、楮實子、補骨脂、小茴香、五味子、訶子、砂仁、山楂、麥芽、火麻仁、蛇床子"],["動物性","阿膠、龜板、鹿茸、白殭蠶、水蛭"],["菌核、菌、樹脂、葉狀體","茯苓、豬苓(菌核);神麴(菌);乳香、血竭(樹脂);昆布(葉狀體)"]]],
+["神農本草經分級",[["中品","葛根、白芍、赤芍、麻黃、生薑、敗醬草、淫羊藿、黃芩、紫草、白芷、吳茱萸、山茱萸、蒼耳子、桑白皮、梔子、當歸、貝母、知母、牡丹皮、苦參"],["中品口訣","哥哥嫂嫂打麻將,敗銀子,只能吃廚餘,很滄桑,知當歸母母母家,人生真苦"],["下品","夏枯草、半夏、附子、桔梗、白芨、連翹"],["下品口訣","下半年父子遇劫機翹辮子了"]]],
+["藥用部位採收時節(少考)",[["果實、種子","多在成熟時採收:瓜蔞、豆蔻;未成熟時採收:青皮"],["花類","正開放時採摘:菊花、旋覆花;含苞、花蕾:金銀花、辛夷;花冠由黃變紅時採收:紅花"],["葉類","花蕾將放時採收:枇杷葉"],["全草類","在植株成長茂盛或開花時採摘;地上部入藥如益母草;全株連根入藥如車前草"],["根莖類","多在春初、秋季採收,有效成分含量高:天麻、葛根;夏季採收:半夏、延胡索"],["樹皮類","春末、夏季採收:杜仲(植物生長旺盛,藥性強、樹皮易剝離)"],["根皮類","秋後採收:牡丹皮、地骨皮"]]],
+["配伍七情",[["單行","單味中藥治病:獨參湯、甘草湯"],["相須","藥效類似中藥合用,產生協同作用:石膏+知母→增強清熱瀉火"],["相使","以某中藥為主,另一中藥為輔,提高療效:茯苓可增黃耆補氣利水之效"],["相畏","某中藥的毒性、副作用被另一中藥消除:生半夏畏生薑(生半夏毒性被生薑減輕)"],["相殺","一種中藥能減少另一中藥的毒性反應:生薑殺生半夏"],["相惡","某中藥之藥效被另一中藥減弱、抵消:人參惡萊菔子(113-2 考過)"],["相反","兩種生藥配伍後產生強烈副作用:十八反"]]],
+["十八反",[["烏頭、附子 反","貝母、半夏、白芨"],["甘草 反","甘遂、大戟、海藻、芫花"],["藜蘆 反","諸參(人參、丹參、玄參)、細辛、芍藥(白芍、赤芍)"],["提醒","以上偏向方劑學,113-2 考出一題(以往沒考過)。"]]],
+["方劑(總整理頁)",[["玉屏風散","防風、黃耆、白朮"],["三黃瀉心湯","黃芩、黃連、大黃"],["三子養親湯","蘇子、白芥子、萊菔子"],["當歸補血湯","當歸、黃耆"],["黃連解毒湯","黃芩、黃連、黃柏、梔子"]]]
+];
+function topics2(){
+ if(tm==="chap")topics();
+ else{list=[];app.innerHTML=D[tm].map(c=>'<details class="card"><summary>'+c[0]+'</summary>'+c[1].map(r=>'<div class="hb">'+(r[0]?'<b>'+r[0]+'</b>':'')+pbtn2(r[0]+r[1])+'<div class="pt">'+r[1]+'</div></div>').join('')+'</details>').join('')}
+ app.insertAdjacentHTML('afterbegin','<div class="yrs" id="sb" style="margin-bottom:10px">'+SUB.map(s=>'<button class="btn'+(s[0]===tm?' p':'')+'" data-m="'+s[0]+'">'+s[1]+'</button>').join('')+'</div>');
+ app.querySelectorAll('#sb button').forEach(b=>b.onclick=()=>{tm=b.dataset.m;topics2()});
+}
+let SET={shq:false,sho:false};try{SET=Object.assign(SET,JSON.parse(localStorage.getItem("zy_set")||"{}"))}catch(e){}
+function saveSet(){try{localStorage.setItem("zy_set",JSON.stringify(SET))}catch(e){}}
+const today=()=>Math.floor(Date.now()/864e5);
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let t0=0,perm=[0,1,2,3];
+function start(l,m){list=SET.shq?l.slice().sort(()=>Math.random()-.5):l.slice();i=0;score=0;done=false;mode=m;t0=Date.now();tab=m==="wrong"?"wrong":"home";quiz()}
+function quiz(){
+ if(i>=list.length){const sec=Math.round((Date.now()-t0)/1000);app.innerHTML='<div class="card"><b>完成!</b><p>答對 '+score+' / '+list.length+'('+Math.round(score/list.length*100)+'%)<br><small>用時 '+Math.floor(sec/60)+' 分 '+sec%60+' 秒</small></p><button class="btn p" id="back">返回</button></div>';
+  $("#back").onclick=()=>{list=[];tab=mode==="wrong"?"wrong":"home";render()};return}
+ const q=list[i],s=st(q.id);
+ perm=[0,1,2,3].slice(0,q[3].length);if(SET.sho)perm.sort(()=>Math.random()-.5);
+ app.innerHTML='<div class="meta"><span>'+q[0]+' 第'+q[1]+'題'+(s.w>=2?'<span class="tag">🔥錯'+s.w+'次</span>':'')+'</span><span>'+(i+1)+'/'+list.length+'</span></div><div class="bar"><i style="width:'+(i/list.length*100)+'%"></i></div><div class="card"><div class="q">'+q[2]+'</div><div id="os">'+perm.map((k,p)=>'<button class="o" data-k="'+k+'">('+"ABCD"[p]+') '+q[3][k]+'</button>').join("")+'</div></div><div id="nx"></div>';
+ done=false;
+ app.querySelectorAll(".o").forEach(b=>b.onclick=()=>answer(+b.dataset.k));
+}
+function answer(k){
+ if(done)return;done=true;const q=list[i],s=st(q.id),ok=k===q[4];
+ if(ok){score++;s.c++;if(mode==="wrong")s.pool=false;if(s.w>0){s.box=Math.min((s.box||0)+1,4);s.due=today()+[1,3,7,14][s.box-1]}}else{s.w++;s.pool=true;s.box=0;s.due=today()}
+ save();
+ app.querySelectorAll(".o").forEach(b=>{const n=+b.dataset.k;if(n===q[4])b.classList.add("ok");else if(n===k)b.classList.add("ng");
+  b.insertAdjacentHTML("beforeend",'<div class="ex">'+(n===q[4]?"✔ ":"✘ ")+q[5][n]+'</div>')});
+ let extra='';
+ if(!ok)extra+='<div class="card"><small>我的錯因(選填)</small><input id="nt" style="width:100%;margin-top:4px;padding:6px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx)" value="'+esc(s.note||"")+'" placeholder="例如:果實看成種子"></div>';
+ extra+='<div><button class="btn" id="fl" style="font-size:13px;padding:4px 10px">'+(s.flag?"已回報有誤(再按取消)":"回報有誤")+'</button></div>';
+ $("#nx").innerHTML=extra+'<div style="margin-top:10px"><button class="btn p" id="n">'+(i+1<list.length?"下一題":"看結果")+'</button></div>';
+ if($("#nt"))$("#nt").oninput=e=>{s.note=e.target.value;save()};
+ $("#fl").onclick=()=>{s.flag=!s.flag;save();$("#fl").textContent=s.flag?"已回報有誤(再按取消)":"回報有誤"};
+ $("#n").onclick=()=>{i++;quiz()};
+}
+function wrong(){
+ list=[];const p=Q.filter(q=>st(q.id).pool),d=Q.filter(q=>{const s=st(q.id);return !s.pool&&s.w>0&&s.due&&s.due<=today()});
+ app.innerHTML='<div class="card"><b>錯題測驗區</b><p>待複習錯題:<b>'+p.length+'</b> 題<br>今日到期複習:<b>'+d.length+'</b> 題<br><small>錯題在此答對一次即移出;答對過的錯題會依 1、3、7、14 天的間隔再出現。</small></p>'+((p.length+d.length)?'<button class="btn p" id="go">開始測驗</button>':'<small>目前沒有需要複習的題目。</small>')+'</div>';
+ if(p.length+d.length)$("#go").onclick=()=>start(p.concat(d).sort(()=>Math.random()-.5),"wrong");
+}
+function hot(){
+ list=[];const h=Q.filter(q=>st(q.id).w>=2).sort((a,b)=>st(b.id).w-st(a.id).w);
+ app.innerHTML='<div class="card"><b>🔥 錯兩次以上的題目</b><p><small>共 '+h.length+' 題,依錯誤次數排序。</small></p>'+(h.length?'<button class="btn p" id="hq">只測這些題</button> ':'')+'<button class="btn" id="rs">清除所有紀錄</button></div>'+(h.map(q=>{const s=st(q.id);return '<div class="card hot"><div class="meta"><span>'+q[0]+' 第'+q[1]+'題</span><span>錯 '+s.w+' 次</span></div><div class="q">'+q[2]+'</div><div>✔ ('+"ABCD"[q[4]]+') '+q[3][q[4]]+'</div><div class="ex">'+q[5][q[4]]+'</div>'+(s.note?'<div class="tag" style="display:block;margin-top:6px">我的錯因:'+esc(s.note)+'</div>':'')+'</div>'}).join("")||'<div class="card"><small>目前沒有錯兩次以上的題目。</small></div>');
+ if(h.length)$("#hq").onclick=()=>start(h,"wrong");
+ $("#rs").onclick=()=>{if(confirm("確定清除所有作答紀錄?")){S={};save();hot()}};
+}
+function chapQ(c){const ns=c[1].flatMap(h=>h[0].replace("★","").split("/"));return Q.filter(q=>ns.some(x=>q.t.includes(x)))}
+function rate(l){let c=0,w=0;l.forEach(q=>{const s=S[q.id];if(s){c+=s.c;w+=s.w}});return c+w?Math.round(c/(c+w)*100)+'%('+c+'/'+(c+w)+')':'尚未作答'}
+function tools(){
+ list=[];const ys=[...new Set(Q.map(q=>q[0]))];
+ let h='<div class="card"><b>模擬考</b><p><small>從全部題庫隨機抽 50 題並計時。</small></p><button class="btn p" id="ex">開始模擬考</button></div>';
+ h+='<div class="card"><b>設定</b><p><label><input type="checkbox" id="s1"'+(SET.shq?' checked':'')+'> 題目順序隨機</label><br><label><input type="checkbox" id="s2"'+(SET.sho?' checked':'')+'> 選項順序隨機</label></p></div>';
+ h+='<div class="card"><b>依章節練習</b><div class="yrs" style="margin-top:8px">'+G3.map((c,n)=>{const m=chapQ(c).length;return m?'<button class="btn cp" data-c="'+n+'">'+c[0]+'('+m+')</button>':''}).join("")+'</div></div>';
+ h+='<div class="card"><b>搜尋</b><input id="sq" placeholder="輸入藥名、成分或關鍵字" style="width:100%;margin-top:6px;padding:8px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx)"><div id="sr"></div></div>';
+ h+='<div class="card"><b>學習統計(答對率)</b><div style="margin-top:6px"><b style="font-size:13px">各年份</b>'+ys.map(y=>'<div class="ex">'+y+':'+rate(Q.filter(q=>q[0]===y))+'</div>').join("")+'<b style="font-size:13px">各章節</b>'+G3.map(c=>'<div class="ex">'+c[0]+':'+rate(chapQ(c))+'</div>').join("")+'</div></div>';
+ const fl=Q.filter(q=>st(q.id).flag);
+ h+='<div class="card"><b>回報有誤的題目('+fl.length+')</b>'+fl.map(q=>'<div class="ex">'+q[0]+' 第'+q[1]+'題:'+esc(q[2]).slice(0,40)+'</div>').join("")+'<p><small>把這個清單告訴我,我會逐題核對修正。</small></p></div>';
+ h+='<div class="card"><b>匯出 / 匯入作答紀錄</b><textarea id="bk" rows="4" style="width:100%;margin-top:6px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font-size:12px"></textarea><div style="margin-top:6px"><button class="btn" id="be">產生備份</button> <button class="btn" id="bi">匯入</button></div><small id="bm"></small></div>';
+ app.innerHTML=h;
+ $("#ex").onclick=()=>start(Q.slice().sort(()=>Math.random()-.5).slice(0,50),"exam");
+ $("#s1").onchange=e=>{SET.shq=e.target.checked;saveSet()};
+ $("#s2").onchange=e=>{SET.sho=e.target.checked;saveSet()};
+ app.querySelectorAll(".cp").forEach(b=>b.onclick=()=>start(chapQ(G3[+b.dataset.c]),"year"));
+ $("#sq").oninput=e=>{const k=e.target.value.trim().toLowerCase();if(!k){$("#sr").innerHTML="";return}
+  const r=Q.filter(q=>q.t.toLowerCase().includes(k));
+  const hs=G3.flatMap(c=>c[1].filter(x=>(x[0]+x[1]+x[2]).toLowerCase().includes(k)).map(x=>x[0]+':'+x[2]));
+  $("#sr").innerHTML='<p><small>題目 '+r.length+' 題;考點 '+hs.length+' 項</small></p>'+(r.length?'<button class="btn p" id="sp">練習這些題</button>':'')+hs.slice(0,8).map(t=>'<div class="ex">'+esc(t)+'</div>').join("");
+  if(r.length)$("#sp").onclick=()=>start(r,"year")};
+ $("#be").onclick=()=>{$("#bk").value=JSON.stringify({S:S,SET:SET});$("#bk").select();try{document.execCommand("copy");$("#bm").textContent="已產生並嘗試複製,請存到備忘錄。"}catch(e){$("#bm").textContent="請手動複製上方文字。"}};
+ $("#bi").onclick=()=>{try{const o=JSON.parse($("#bk").value);if(o.S)Object.assign(S,o.S);if(o.SET)Object.assign(SET,o.SET);save();saveSet();$("#bm").textContent="已匯入。"}catch(e){$("#bm").textContent="格式不正確。"}};
+}
+let NOTES=[];try{NOTES=JSON.parse(localStorage.getItem("zy_notes")||"[]")}catch(e){}
+function saveNotes(){try{localStorage.setItem("zy_notes",JSON.stringify(NOTES))}catch(e){}}
+function favBtn(q){return '<button class="btn fv" data-id="'+q.id+'" style="padding:2px 10px;font-size:13px;margin-left:8px">'+(st(q.id).fav?'★ 已收藏':'☆ 收藏')+'</button>'}
+const _quiz=quiz;
+quiz=function(){_quiz();if(i<list.length){const m=app.querySelector('.meta');if(m&&m.firstElementChild)m.firstElementChild.insertAdjacentHTML('beforeend',favBtn(list[i]))}};
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest(".fv");if(!b)return;const s=st(b.dataset.id);s.fav=!s.fav;save();document.querySelectorAll('.fv[data-id="'+b.dataset.id+'"]').forEach(x=>x.textContent=s.fav?'★ 已收藏':'☆ 收藏')});
+const _tools=tools;
+tools=function(){_tools();
+ const f=Q.filter(q=>st(q.id).fav);
+ const c=document.createElement("div");c.className="card";
+ c.innerHTML='<b>★ 收藏題目('+f.length+')</b>'+(f.length?'<p><button class="btn p" id="fp">練習收藏題</button></p>':'<p><small>在作答畫面按「☆ 收藏」就會加到這裡。</small></p>')+f.map(q=>'<div class="hb"><small>'+q[0]+' 第'+q[1]+'題</small><div class="pt">'+esc(q[2])+'</div><div class="ex">✔ ('+"ABCD"[q[4]]+') '+esc(q[3][q[4]])+'</div>'+favBtn(q)+'</div>').join("");
+ app.insertBefore(c,app.firstChild);
+ const fp=c.querySelector("#fp");if(fp)fp.onclick=()=>start(f,"year");
+ $("#be").onclick=()=>{$("#bk").value=JSON.stringify({S:S,SET:SET,NOTES:NOTES});$("#bk").select();try{document.execCommand("copy");$("#bm").textContent="已產生並嘗試複製,請存到備忘錄。"}catch(e){$("#bm").textContent="請手動複製上方文字。"}};
+ $("#bi").onclick=()=>{try{const o=JSON.parse($("#bk").value);if(o.S)Object.assign(S,o.S);if(o.SET)Object.assign(SET,o.SET);if(o.NOTES){const ids=new Set(NOTES.map(n=>n.i));o.NOTES.forEach(n=>{if(!ids.has(n.i))NOTES.push(n)});saveNotes()}save();saveSet();$("#bm").textContent="已匯入。"}catch(e){$("#bm").textContent="格式不正確。"}};
+};
+const _hot=hot;
+hot=function(){_hot();const r=$("#rs");if(r)r.onclick=()=>{if(confirm("確定清除所有作答紀錄?(收藏與隨手寫不會被清除)")){const k={};Object.keys(S).forEach(id=>{if(S[id]&&S[id].fav)k[id]={w:0,c:0,pool:false,fav:true}});S=k;save();hot()}}};
+function curQ(){return (tab==="home"||tab==="wrong")&&list.length&&i<list.length?list[i]:null}
+function notePanel(){let p=document.getElementById("np");if(!p){p=document.createElement("div");p.id="np";p.style.cssText="position:fixed;left:0;right:0;bottom:0;max-height:75%;overflow:auto;background:var(--sf);border-top:1px solid var(--bd);box-shadow:0 -4px 16px rgba(0,0,0,.25);padding:12px 14px calc(12px + env(safe-area-inset-bottom,0px));z-index:30;display:none";document.body.appendChild(p)}return p}
+function renderNotes(){const p=notePanel(),q=curQ();
+ p.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center"><b>隨手一寫</b><button class="btn" id="nc" style="padding:2px 10px">關閉</button></div><textarea id="ntx" rows="3" placeholder="想到什麼就寫…" style="width:100%;margin-top:8px;padding:8px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font-size:15px"></textarea>'+(q?'<label style="font-size:13px"><input type="checkbox" id="nq" checked> 附上目前題目('+q[0]+' 第'+q[1]+'題)</label>':'')+'<div style="margin-top:6px"><button class="btn p" id="ns">儲存</button></div><div id="nl">'+NOTES.slice().reverse().map(n=>'<div class="hb"><small>'+esc(n.d)+(n.q?'・'+esc(n.q):'')+'</small><div class="pt">'+esc(n.t).replace(/\n/g,'<br>')+'</div><button class="btn nd" data-i="'+n.i+'" style="padding:1px 8px;font-size:12px;margin-top:4px">刪除</button></div>').join('')+'</div>';
+ $("#nc").onclick=()=>{p.style.display="none"};
+ $("#ns").onclick=()=>{const t=$("#ntx").value.trim();if(!t)return;const dt=new Date(),nq=$("#nq");NOTES.push({i:Date.now(),d:dt.getFullYear()+"/"+(dt.getMonth()+1)+"/"+dt.getDate()+" "+String(dt.getHours()).padStart(2,"0")+":"+String(dt.getMinutes()).padStart(2,"0"),t:t,q:(q&&nq&&nq.checked)?q[0]+" 第"+q[1]+"題":""});saveNotes();renderNotes()};
+ p.querySelectorAll(".nd").forEach(b=>b.onclick=()=>{NOTES=NOTES.filter(n=>String(n.i)!==b.dataset.i);saveNotes();renderNotes()});
+}
+const fb=document.createElement("button");fb.textContent="✎";fb.title="隨手一寫";fb.style.cssText="position:fixed;right:14px;bottom:calc(16px + env(safe-area-inset-bottom,0px));width:48px;height:48px;border-radius:24px;border:0;background:var(--ac);color:#fff;font-size:22px;z-index:25;box-shadow:0 2px 8px rgba(0,0,0,.3)";
+fb.onclick=()=>{const p=notePanel();if(p.style.display==="block"){p.style.display="none"}else{renderNotes();p.style.display="block"}};
+document.body.appendChild(fb);document.querySelector(".w").style.paddingBottom="90px";
+render();
+</script></body></html>
